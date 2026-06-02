@@ -54,3 +54,32 @@ Sau khi hoàn tất gán nhãn, chia bộ dữ liệu vào các thư mục `trai
 python src/data_collection/label_tool.py --mode split
 ```
 - **Kết quả**: Dữ liệu sẽ được tự động phân bổ vào `dataset/train/` và `dataset/test/` sẵn sàng cho các bước Machine Learning.
+
+---
+
+## Bước 4: Làm việc nhóm và Gộp dữ liệu (Dành cho Leader/ML Team)
+
+Khi làm việc nhóm, mỗi người tự thực hiện từ Bước 1 đến Bước 3 trên máy cá nhân. Sau đó, nhóm cần gom dữ liệu lại để có một Master Dataset.
+
+**4.1. Nộp dữ liệu (Upload):**
+1. Tạo một thư mục chung trên Google Drive (VD: `EyeBlink_Contributions`).
+2. Bên trong, tạo các thư mục mang tên từng thành viên (VD: `Hoa/`, `Nam/`).
+3. Mỗi thành viên **nén (zip)** thư mục `dataset/` của mình lại thành `dataset.zip` và tải lên thư mục tên mình trên Drive.
+
+**4.2. Gộp dữ liệu tự động (Merge):**
+Người phụ trách tổng hợp dữ liệu sẽ tải tất cả các file `dataset.zip` về máy, giải nén và đặt vào thư mục `data/contributions/` trong dự án theo cấu trúc:
+```text
+data/contributions/
+├── Hoa/
+│   └── dataset/  <-- Folder dataset của Hoa sau khi giải nén
+├── Nam/
+│   └── dataset/  <-- Folder dataset của Nam sau khi giải nén
+```
+Sau đó, chạy công cụ gộp dữ liệu:
+```bash
+python src/data_collection/merge_datasets.py
+```
+- **Kết quả**: 
+  - Tạo ra một thư mục `dataset_master/` chứa toàn bộ ảnh của cả nhóm đã được trộn chung vào các thư mục `train` và `test`.
+  - Tạo ra một file `metadata_master.csv` tổng hợp tất cả các dòng dữ liệu của cả nhóm, đồng thời thêm cột `contributor` để biết ảnh nào do ai đóng góp.
+  - Bạn có thể lấy thư mục `dataset_master/` này để tiến hành train model mà không sợ bị xung đột file!
