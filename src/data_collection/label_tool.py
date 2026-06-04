@@ -193,6 +193,7 @@ def mode_review(output_dir):
     print("    O         → label as 'open'")
     print("    C         → label as 'closed'")
     print("    D / X     → delete / discard image from dataset")
+    print("    B         → go back to previous image")
     print("    SPACE     → accept current label")
     print("    Q         → quit and save progress")
     print("=" * 60)
@@ -225,7 +226,9 @@ def mode_review(output_dir):
     # Filter records that were successfully extracted
     valid_records = [r for r in records if r["status"] == "success" and r["image_path"]]
 
-    for idx, row in enumerate(valid_records):
+    idx = 0
+    while idx < len(valid_records):
+        row = valid_records[idx]
         img_path = row["image_path"]
         
         # If absolute path doesn't exist, try relative to current directory
@@ -274,7 +277,7 @@ def mode_review(output_dir):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.35, (160, 160, 160), 1)
 
         # Draw quick controls instructions
-        cv2.putText(display, "[O]=Open [C]=Closed [D/X]=Delete [SPACE]=Ok [Q]=Quit", (5, display_size - 55),
+        cv2.putText(display, "[O]=Open [C]=Closed [D/X]=Del [B]=Back [SPACE]=Ok [Q]=Quit", (5, display_size - 55),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.3, (180, 180, 180), 1)
 
         # Retrieve the original frame from the video
@@ -322,6 +325,7 @@ def mode_review(output_dir):
         cv2.imshow("Dataset Review Tool", combined_display)
 
         quit_review = False
+        go_back = False
         while True:
             key = cv2.waitKey(0) & 0xFF
 
@@ -357,6 +361,9 @@ def mode_review(output_dir):
                 except Exception as e:
                     print(f"\n  [ERROR] Cannot delete file {img_path}: {e}")
                 break
+            elif key == ord("b") or key == ord("B"):
+                go_back = True
+                break
             elif key == ord(" "):
                 # Accept current label as is
                 break
@@ -368,7 +375,15 @@ def mode_review(output_dir):
             print(f"\n[INFO] Review stopped early at item {idx + 1}/{len(valid_records)}.")
             break
 
+        if go_back:
+            if idx > 0:
+                idx -= 1
+            else:
+                print("\n  [INFO] Đã ở ảnh đầu tiên, không thể quay lại.")
+            continue
+
         reviewed += 1
+        idx += 1
 
     if cap is not None:
         cap.release()
