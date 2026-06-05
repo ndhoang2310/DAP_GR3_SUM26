@@ -293,7 +293,7 @@ def mode_review(output_dir):
                 current_video_path = video_path
             
             if cap is not None and cap.isOpened():
-                cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
+                cap.set(cv2.CAP_PROP_POS_FRAMES, max(0, frame_idx - 1))
                 ret, frame = cap.read()
                 if ret and frame is not None:
                     # Resize the full frame to match display_size height
