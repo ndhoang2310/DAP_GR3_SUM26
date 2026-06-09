@@ -6,19 +6,15 @@ Modes (selected via --mode):
     review  Manual review: display each image + auto-label, user confirms,
             re-labels ('o' = open, 'c' = closed), deletes ('d' or 'x'),
             accepts (SPACE), or quits ('q').
-    split   Organise labelled patches into train/test directories (80/20 split).
 
 Usage examples:
     python src/data_collection/label_tool.py --mode auto --threshold 0.20
     python src/data_collection/label_tool.py --mode review
-    python src/data_collection/label_tool.py --mode split
 """
 
 import os
 import sys
 import csv
-import shutil
-import random
 import argparse
 import cv2
 import numpy as np
@@ -32,8 +28,6 @@ from config import (
     TRAIN_DIR,
     TEST_DIR,
     EAR_THRESHOLD_LABELING,
-    TEST_SIZE,
-    RANDOM_STATE,
 )
 
 # Default paths
@@ -402,111 +396,6 @@ def mode_review(output_dir):
 
 
 # ===================================================================
-# Mode: split
-# ===================================================================
-
-def mode_split(output_dir):
-    """
-    Split successfully labeled eye patches into train/test directories (80/20).
-    """
-    csv_path = os.path.join(output_dir, "metadata.csv")
-    print("=" * 60)
-    print("  TRAIN / TEST SPLIT MODE")
-    print("=" * 60)
-
-    if not os.path.isfile(csv_path):
-        print(f"[ERROR] metadata.csv not found at: {csv_path}")
-        print("        Run --mode auto first.")
-        return
-
-    records = load_metadata(csv_path)
-    if not records:
-        print("[WARNING] metadata.csv is empty.")
-        return
-
-    # Filter records that are valid and labeled
-    valid_records = [
-        r for r in records
-        if r["status"] == "success" and r["final_label"] in ("open", "closed") and r["image_path"]
-    ]
-
-    if not valid_records:
-        print("[ERROR] No valid labeled records to split. Run --mode auto or --mode review first.")
-        return
-
-    open_files = [r for r in valid_records if r["final_label"] == "open"]
-    closed_files = [r for r in valid_records if r["final_label"] == "closed"]
-
-    print(f"  Total labeled  : {len(valid_records)}")
-    print(f"  Open           : {len(open_files)}")
-    print(f"  Closed         : {len(closed_files)}")
-    print(f"  Test fraction  : {TEST_SIZE}")
-    print()
-
-    # Shuffle deterministically using config seed
-    random.seed(RANDOM_STATE)
-    random.shuffle(open_files)
-    random.shuffle(closed_files)
-
-    # Split lists
-    def split_list(lst, test_frac):
-        n_test = max(1, int(len(lst) * test_frac))
-        return lst[n_test:], lst[:n_test]
-
-    train_open, test_open = split_list(open_files, TEST_SIZE)
-    train_closed, test_closed = split_list(closed_files, TEST_SIZE)
-
-    # Target directories
-    dirs = {
-        "train_open": os.path.join(TRAIN_DIR, "open"),
-        "train_closed": os.path.join(TRAIN_DIR, "closed"),
-        "test_open": os.path.join(TEST_DIR, "open"),
-        "test_closed": os.path.join(TEST_DIR, "closed"),
-    }
-    
-    # Recreate clean directories
-    for name, d in dirs.items():
-        if os.path.exists(d):
-            shutil.rmtree(d)
-        os.makedirs(d, exist_ok=True)
-
-    # Copy files helper
-    def copy_records(records_list, dest_dir):
-        copied = 0
-        for row in records_list:
-            src = row["image_path"]
-            
-            # If path not exists directly, check inside output_dir
-            if not os.path.isfile(src):
-                src = os.path.join(output_dir, os.path.basename(row["image_path"]))
-
-            if not os.path.isfile(src):
-                print(f"  [WARNING] File missing during copy: {src}")
-                continue
-            
-            dst = os.path.join(dest_dir, os.path.basename(src))
-            shutil.copy2(src, dst)
-            copied += 1
-        return copied
-
-    n1 = copy_records(train_open, dirs["train_open"])
-    n2 = copy_records(train_closed, dirs["train_closed"])
-    n3 = copy_records(test_open, dirs["test_open"])
-    n4 = copy_records(test_closed, dirs["test_closed"])
-
-    print("  Files copied successfully:")
-    print(f"    train/open   : {n1}")
-    print(f"    train/closed : {n2}")
-    print(f"    test/open    : {n3}")
-    print(f"    test/closed  : {n4}")
-    print(f"    TOTAL        : {n1 + n2 + n3 + n4}")
-    print()
-    print(f"  Train directory: {TRAIN_DIR}")
-    print(f"  Test directory : {TEST_DIR}")
-    print("=" * 60)
-
-
-# ===================================================================
 # Entry point
 # ===================================================================
 
@@ -519,8 +408,8 @@ def main():
         "--mode",
         type=str,
         required=True,
-        choices=["auto", "review", "split"],
-        help="Labeling mode: auto | review | split",
+        choices=["auto", "review"],
+        help="Labeling mode: auto | review",
     )
     parser.add_argument(
         "--threshold",
@@ -547,8 +436,6 @@ def main():
         mode_auto(output_dir, threshold)
     elif args.mode == "review":
         mode_review(output_dir)
-    elif args.mode == "split":
-        mode_split(output_dir)
     else:
         parser.print_help()
 

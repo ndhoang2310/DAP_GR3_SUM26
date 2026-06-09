@@ -4,7 +4,7 @@ Quy trình xử lý dữ liệu của dự án bao gồm 3 bước chính: Thu t
 
 ## Bước 1: Thu thập Video (Video Collection)
 
-Sử dụng camera để quay các đoạn video ngắn (khoảng 12 giây) người dùng đang chớp mắt hoặc nhắm mắt.
+Sử dụng camera để quay các đoạn video ngắn (khoảng 12 giây) người dùng đang chớp mắt hoặc nhắm mắt. Video sẽ luôn được tự động xuất ra với chuẩn **15 FPS** dù phần cứng camera của bạn đang quay ở tốc độ cao hơn (như 30 FPS) hay chậm hơn.
 - **Lệnh thực thi**:
   ```bash
   python src/data_collection/collect_video.py
@@ -28,7 +28,7 @@ Hệ thống sẽ đọc các video thô, sử dụng **MediaPipe Face Mesh** đ
 
 ## Bước 3: Gán nhãn dữ liệu (Data Labeling)
 
-Dữ liệu hình ảnh cần được gán nhãn `Open` (Mở mắt) hoặc `Closed` (Nhắm mắt) để phục vụ cho việc huấn luyện mô hình sau này. Có 3 chế độ gán nhãn:
+Dữ liệu hình ảnh cần được gán nhãn `Open` (Mở mắt) hoặc `Closed` (Nhắm mắt) để phục vụ cho việc huấn luyện mô hình sau này. Có 2 chế độ gán nhãn:
 
 **1. Gán nhãn tự động (Auto Labeling):**
 Dựa vào chỉ số EAR và một ngưỡng (threshold) để tự động phân loại.
@@ -48,13 +48,6 @@ python src/data_collection/label_tool.py --mode review
 - `SPACE`: Bỏ qua (Giữ nguyên nhãn hiện tại).
 - `q`: Lưu tiến độ và thoát.
 
-**3. Chia tập Train/Test (Split Dataset):**
-Sau khi hoàn tất gán nhãn, chia bộ dữ liệu vào các thư mục `train` (80%) và `test` (20%).
-```bash
-python src/data_collection/label_tool.py --mode split
-```
-- **Kết quả**: Dữ liệu sẽ được tự động phân bổ vào `dataset/train/` và `dataset/test/` sẵn sàng cho các bước Machine Learning.
-
 ---
 
 ## Bước 4: Làm việc nhóm và Gộp dữ liệu (Dành cho Leader/ML Team)
@@ -64,7 +57,7 @@ Khi làm việc nhóm, mỗi người tự thực hiện từ Bước 1 đến B
 **4.1. Nộp dữ liệu lên Google Drive (Upload):**
 1. Tạo một thư mục chung trên Google Drive (VD: `EyeBlink_Contributions`).
 2. Bên trong thư mục chung, tạo các thư mục con mang mã số hoặc tên của từng thành viên (VD: `M01/`, `M02/`...).
-3. Mỗi thành viên chạy quy trình (quay video, trích xuất và gán nhãn) trên máy cá nhân của mình. Sau khi hoàn thành xong **Bước 3 (Split)**, mỗi người tự tải lên (hoặc nén zip rồi tải lên) hai thư mục dữ liệu cục bộ vào thư mục của mình trên Drive:
+3. Mỗi thành viên chạy quy trình (quay video, trích xuất và gán nhãn) trên máy cá nhân của mình. Sau khi hoàn thành xong **Bước 3 (Gán nhãn)**, mỗi người tự tải lên (hoặc nén zip rồi tải lên) hai thư mục dữ liệu cục bộ vào thư mục của mình trên Drive:
    - Thư mục `data/raw_videos/` (Video gốc của bạn)
    - Thư mục `dataset/` (Ảnh mắt đã cắt và nhãn hoàn chỉnh của bạn)
 
