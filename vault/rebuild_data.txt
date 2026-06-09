@@ -1,0 +1,16 @@
+  EAR threshold : 0.09
+  Source dir    : /home/dacekey/DAP_GR3_SUM26/dataset/raw_eyes
+
+  Total records : 2330
+  Labeled success: 2330
+    Open         : 1782
+    Closed       : 548
+  Skipped/Errors : 0
+================================
+ ┌────────┬───────┐
+ │ Class  │ Count │
+ ├────────┼───────┤
+ │ Open   │ 1,953 │
+ │ Closed │ 377   │
+ │ Total  │ 2,330 │
+ └────────┴───────┘
