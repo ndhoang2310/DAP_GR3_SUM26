@@ -66,12 +66,13 @@ Leader đã khởi tạo DVC, liên kết Google Drive và nạp mã xác thực
 
 **4.3. Dành cho các thành viên (Upload Dữ Liệu Tự Động):**
 Mọi thành viên sau khi quay video và gán nhãn xong, chỉ cần thao tác:
-1. Đảm bảo đã cài DVC: `pip install -r requirements.txt`
-2. Chạy script đồng bộ siêu tốc:
+1. Đảm bảo cập nhật code và cấu hình DVC mới nhất từ Leader: `git pull origin main`
+2. Đảm bảo đã cài DVC: `pip install -r requirements.txt`
+3. Chạy script đồng bộ siêu tốc:
 ```bash
 python src/data_collection/dvc_sync.py
 ```
-3. **Xác thực Google (Chỉ lần đầu tiên)**: Khi cửa sổ trình duyệt hiện ra, bạn đăng nhập bằng email Google của mình. Nếu Google hiện cảnh báo an toàn *(Google hasn't verified this app)*, bạn cứ nhấn **Advanced (Nâng cao)** -> Chọn **Go to dap-dvc (unsafe)** -> Chọn **Continue (Tiếp tục)** là xong.
+4. **Xác thực Google (Chỉ lần đầu tiên)**: Khi cửa sổ trình duyệt hiện ra, bạn đăng nhập bằng email Google của mình. Nếu Google hiện cảnh báo an toàn *(Google hasn't verified this app)*, bạn cứ nhấn **Advanced (Nâng cao)** -> Chọn **Go to dap-dvc (unsafe)** -> Chọn **Continue (Tiếp tục)** là xong.
 - Script sẽ tự lo toàn bộ phần việc còn lại: Tạo nhánh `data/M0X`, đẩy dữ liệu lên Drive, và push nhánh lên Github. Bạn chỉ việc ngồi uống nước chờ báo `[DONE]`.
 
 **4.4. Dành cho Leader (Tổng hợp Dữ Liệu Tự Động):**
