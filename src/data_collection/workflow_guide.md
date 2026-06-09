@@ -54,42 +54,30 @@ python src/data_collection/label_tool.py --mode review
 
 Khi làm việc nhóm, mỗi người tự thực hiện từ Bước 1 đến Bước 3 trên máy cá nhân. Sau đó, nhóm cần gom dữ liệu lại để có một Master Dataset.
 
-**4.1. Nộp dữ liệu lên Google Drive (Upload):**
-1. Tạo một thư mục chung trên Google Drive (VD: `EyeBlink_Contributions`).
-2. Bên trong thư mục chung, tạo các thư mục con mang mã số hoặc tên của từng thành viên (VD: `M01/`, `M02/`...).
-3. Mỗi thành viên chạy quy trình (quay video, trích xuất và gán nhãn) trên máy cá nhân của mình. Sau khi hoàn thành xong **Bước 3 (Gán nhãn)**, mỗi người tự tải lên (hoặc nén zip rồi tải lên) hai thư mục dữ liệu cục bộ vào thư mục của mình trên Drive:
-   - Thư mục `data/raw_videos/` (Video gốc của bạn)
-   - Thư mục `dataset/` (Ảnh mắt đã cắt và nhãn hoàn chỉnh của bạn)
 
-**Cấu trúc thư mục trên Google Drive chung của nhóm:**
-```text
-Google Drive/
-├── M01/ (Thành viên 1)
-│   ├── data/
-│   │   └── raw_videos/           # Video thô của M01
-│   └── dataset/                  # Ảnh mắt đã cắt và file metadata.csv của M01
-├── M02/ (Thành viên 2)
-│   ├── data/
-│   │   └── raw_videos/
-│   └── dataset/
-└── ... (M03, M04, M05, M06)
-```
 
-**4.2. Gộp dữ liệu tự động (Merge):**
-Người phụ trách tổng hợp dữ liệu (Leader/ML Team) sẽ tải toàn bộ các thư mục đóng góp của các thành viên từ Google Drive về máy cá nhân của mình, giải nén và đặt vào thư mục `data/contributions/` trong dự án theo cấu trúc:
-```text
-data/contributions/
-├── M01/
-│   └── dataset/  <-- Thư mục dataset của M01 (phải chứa metadata.csv)
-├── M02/
-│   └── dataset/  <-- Thư mục dataset của M02 (phải chứa metadata.csv)
-└── ...
-```
-Sau đó, chạy công cụ gộp dữ liệu tại thư mục gốc của dự án:
+**4.1. Giải thích về DVC (Dành cho toàn bộ thành viên):**
+Dự án sử dụng **DVC (Data Version Control)** để tự động hóa việc đồng bộ dữ liệu nặng qua Google Drive:
+- **Tiết kiệm & Thông minh**: Khi đẩy lên, DVC **chỉ tải thư mục `data/raw_videos/` và `dataset/`**. Khi bạn chạy script nhiều lần, DVC tự động nhận diện và chỉ tải lên các video/ảnh mới, bỏ qua file cũ giúp tiết kiệm tối đa thời gian.
+- **Tại sao thư mục Drive lại lộn xộn?** DVC biến Google Drive thành một "kho chứa ngầm" (database). Các file được băm thành mã MD5 và lưu vào các thư mục tên 2 chữ cái để chống trùng lặp. Vì vậy, **bạn không thể và không cần xem ảnh trực tiếp trên trình duyệt web Drive**. Việc khôi phục lại cấu trúc thư mục đẹp đẽ sẽ được hệ thống của Leader tự lo.
+
+**4.2. Cấu hình DVC (Đã được Leader hoàn tất):**
+Leader đã khởi tạo DVC, liên kết Google Drive và nạp mã xác thực (OAuth). Cấu hình này đã được đẩy lên Github nên các thành viên không cần thiết lập lại.
+
+**4.3. Dành cho các thành viên (Upload Dữ Liệu Tự Động):**
+Mọi thành viên sau khi quay video và gán nhãn xong, chỉ cần thao tác:
+1. Đảm bảo đã cài DVC: `pip install -r requirements.txt`
+2. Chạy script đồng bộ siêu tốc:
 ```bash
-python src/data_collection/merge_datasets.py
+python src/data_collection/dvc_sync.py
 ```
-- **Kết quả**: 
-  - Tạo ra một thư mục `dataset_master/` chứa toàn bộ ảnh của cả nhóm đã được gom chung và phân bổ vào các thư mục con `train` và `test` phù hợp.
-  - Tạo ra một file `metadata_master.csv` tổng hợp tất cả dòng dữ liệu của cả nhóm, đồng thời tự động thêm cột `contributor` để theo dõi nguồn gốc dữ liệu của từng thành viên.
-  - Thư mục `dataset_master/` này sẽ được dùng để thực hiện huấn luyện các mô hình Machine Learning sau này mà không lo bị trùng lặp hay ghi đè file!
+3. **Xác thực Google (Chỉ lần đầu tiên)**: Khi cửa sổ trình duyệt hiện ra, bạn đăng nhập bằng email Google của mình. Nếu Google hiện cảnh báo an toàn *(Google hasn't verified this app)*, bạn cứ nhấn **Advanced (Nâng cao)** -> Chọn **Go to dap-dvc (unsafe)** -> Chọn **Continue (Tiếp tục)** là xong.
+- Script sẽ tự lo toàn bộ phần việc còn lại: Tạo nhánh `data/M0X`, đẩy dữ liệu lên Drive, và push nhánh lên Github. Bạn chỉ việc ngồi uống nước chờ báo `[DONE]`.
+
+**4.4. Dành cho Leader (Tổng hợp Dữ Liệu Tự Động):**
+Leader không cần lên web tải từng file zip nữa. Chỉ việc chạy lệnh:
+```bash
+python src/data_collection/dvc_pull_and_merge.py
+```
+- Khi được hỏi, Leader nhập mã các thành viên cần gộp (VD: `M01, M02`). DVC sẽ tự động kết nối với kho Drive, tải chính xác hình ảnh của những người đó về máy và khôi phục lại thành cấu trúc thư mục người đọc được.
+- Script sau đó sẽ tự kích hoạt cơ chế gộp, tạo ra thư mục `dataset_master/` và file `metadata_master.csv` hoàn chỉnh cuối cùng.
