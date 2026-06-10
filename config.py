@@ -31,7 +31,7 @@ EYE_PATCH_SIZE = (24, 24)  # Width x Height for cropped eye images
 # EAR (Eye Aspect Ratio) SETTINGS
 # ============================================================
 # EAR threshold for semi-auto labeling (used in label_tool.py)
-EAR_THRESHOLD_LABELING = 0.21
+EAR_THRESHOLD_LABELING = 0.09
 
 # ============================================================
 # DATASET SPLIT SETTINGS
