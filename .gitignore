@@ -31,6 +31,8 @@ desktop.ini
 
 # --- Data & Dataset (too large for git) ---
 data/
+!data/**/.gitignore
+!data/**/*.dvc
 dataset/
 dataset_master/
 # --- Trained Models (large binary files) ---
