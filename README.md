@@ -29,6 +29,7 @@ Hệ thống sử dụng **MediaPipe Face Mesh** để quét khuôn mặt qua we
 **1. Ghi hình Webcam (Video Collection):** Thu thập các luồng video thực tế của người dùng với nhiều điều kiện ánh sáng và góc độ khác nhau.
 **2. Trích xuất tự động (Eye Extraction):** Bỏ qua các phương pháp truyền thống chậm chạp, hệ thống sử dụng sức mạnh của MediaPipe để tracking khuôn mặt với độ trễ cực thấp.
 **3. Công cụ Gán nhãn (Labeling Tool):** Bộ công cụ console tiện dụng cho phép người dùng gán nhãn hàng loạt tự động bằng công thức EAR và duyệt lại (review) bằng phím tắt một cách trực quan.
+**4. Đồng bộ Dữ liệu tự động (DVC):** Quản lý phiên bản dữ liệu nặng bằng DVC, tự động hóa hoàn toàn quy trình tải lên/tải xuống qua Google Drive giữa các thành viên và Leader.
 
 ---
 
@@ -79,7 +80,10 @@ eye-blink-detection/
 │   └── data_collection/          # Nơi chứa mã nguồn chính của pipeline
 │       ├── collect_video.py      
 │       ├── extract_eyes.py       
-│       ├── label_tool.py         
+│       ├── label_tool.py
+│       ├── dvc_sync.py           # Script tự động đẩy dữ liệu lên DVC & Github (Dành cho Member)
+│       ├── dvc_pull_and_merge.py # Script tự động tải và gộp dữ liệu từ DVC (Dành cho Leader)
+│       ├── merge_datasets.py     
 │       └── workflow_guide.md     # 📖 TÀI LIỆU HƯỚNG DẪN QUY TRÌNH CHI TIẾT
 ├── config.py                     # File cấu hình (kích thước, EAR threshold,...)
 ├── requirements.txt              # Danh sách thư viện cần thiết
