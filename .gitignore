@@ -30,7 +30,10 @@ Thumbs.db
 desktop.ini
 
 # --- Data & Dataset (too large for git) ---
-data/
+data/*
+!data/**/*.dvc
+!data/**/.gitignore
+!data/.gitignore
 dataset/
 dataset_master/
 # --- Trained Models (large binary files) ---
