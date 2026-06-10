@@ -1,0 +1,6 @@
+outs:
+- md5: 7bd1a6116fe0d65ef3c660cd7a4c67ef.dir
+  size: 1365863
+  nfiles: 1435
+  hash: md5
+  path: raw_eyes
