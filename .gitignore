@@ -33,6 +33,8 @@ desktop.ini
 data/
 dataset/
 dataset_master/
+!*.dvc
+!*/
 # --- Trained Models (large binary files) ---
 models/*.pkl
 models/*.dat
