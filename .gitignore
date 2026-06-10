@@ -30,7 +30,7 @@ Thumbs.db
 desktop.ini
 
 # --- Data & Dataset (too large for git) ---
-data/
+data/**
 !data/**/.gitignore
 !data/**/*.dvc
 dataset/
