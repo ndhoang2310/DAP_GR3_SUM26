@@ -28,7 +28,7 @@ Hệ thống sử dụng **MediaPipe Face Mesh** để quét khuôn mặt qua we
 
 **1. Ghi hình Webcam (Video Collection):** Thu thập các luồng video thực tế của người dùng với nhiều điều kiện ánh sáng và góc độ khác nhau.
 **2. Trích xuất tự động (Eye Extraction):** Bỏ qua các phương pháp truyền thống chậm chạp, hệ thống sử dụng sức mạnh của MediaPipe để tracking khuôn mặt với độ trễ cực thấp.
-**3. Công cụ Gán nhãn (Labeling Tool):** Bộ công cụ console tiện dụng cho phép người dùng gán nhãn hàng loạt tự động bằng công thức EAR, duyệt lại (review) bằng phím tắt một cách trực quan, và tự động chia tách dữ liệu vào các thư mục Train/Test.
+**3. Công cụ Gán nhãn (Labeling Tool):** Bộ công cụ console tiện dụng cho phép người dùng gán nhãn hàng loạt tự động bằng công thức EAR và duyệt lại (review) bằng phím tắt một cách trực quan.
 
 ---
 

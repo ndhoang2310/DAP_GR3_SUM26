@@ -230,8 +230,12 @@ def main():
                     # Ask if user wants to record another
                     print("\n  Tiep tuc quay video khac? (Nhan SPACE de thiet lap lai, Q de thoat)")
                 else:
-                    writer.write(frame)
-                    frame_count += 1
+                    # Enforce exact FPS: skip frames if camera is faster (e.g., 30fps), 
+                    # or duplicate if slower, to ensure output matches CAMERA_FPS
+                    expected_frames = int(elapsed * CAMERA_FPS)
+                    while frame_count < expected_frames:
+                        writer.write(frame)
+                        frame_count += 1
 
                     # --- Overlay: Recording indicator ---
                     # Red pulsating dot
