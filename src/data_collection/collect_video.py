@@ -230,10 +230,11 @@ def main():
                     # Ask if user wants to record another
                     print("\n  Tiep tuc quay video khac? (Nhan SPACE de thiet lap lai, Q de thoat)")
                 else:
-                    # Enforce exact FPS: skip frames if camera is faster (e.g., 30fps), 
-                    # or duplicate if slower, to ensure output matches CAMERA_FPS
+                    # Enforce FPS: skip frames if camera is faster (e.g., 30fps).
+                    # If camera is slower than CAMERA_FPS, just write real frames
+                    # without duplicating – we prefer real data over padded data.
                     expected_frames = int(elapsed * CAMERA_FPS)
-                    while frame_count < expected_frames:
+                    if frame_count < expected_frames:
                         writer.write(frame)
                         frame_count += 1
 

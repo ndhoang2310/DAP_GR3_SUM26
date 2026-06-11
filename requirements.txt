@@ -8,3 +8,7 @@ mediapipe==0.10.14
 # Data Processing
 numpy>=1.24.0
 pandas>=2.0.0
+
+# Data Version Control
+dvc>=3.0.0
+dvc-gdrive>=2.20.0
