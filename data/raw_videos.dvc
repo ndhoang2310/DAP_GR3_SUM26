@@ -1,0 +1,6 @@
+outs:
+- md5: 9b8fe1ae897417933158e295c2c06ba0.dir
+  size: 3127451
+  nfiles: 4
+  hash: md5
+  path: raw_videos
