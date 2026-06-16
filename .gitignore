@@ -45,3 +45,4 @@ models/*.png
 # --- Jupyter ---
 .ipynb_checkpoints/
 /dataset
+/dataset_master
