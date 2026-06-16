@@ -64,6 +64,8 @@ dvc pull
 4. **Cắt Cửa sổ trượt (Sliding Window)**:
    - Sử dụng kết quả phân tích động lực học nháy mắt của Hiền: Cắt chuỗi thành các cửa sổ có kích thước **$N = 7$ frames**, bước trượt (step) = 1 frame.
 5. **Gán nhãn Nháy mắt (V-Shape Labeling)**:
-   - Sử dụng **Static Threshold = 0.1050** do Hiền cung cấp từ biểu đồ ROC.
-   - Quy luật dán nhãn: Một cửa sổ chỉ được dán nhãn `Blink` (1) khi có biểu đồ chữ V (Mở $\to$ Nhắm qua mốc 0.1050 $\to$ Mở). Nếu toàn bộ 7 frames đều `< 0.1050` (ví dụ đang ngủ), dán nhãn `No-Blink` (0) hoặc `Long-Closure` (2) để tránh việc mô hình đếm sai số lần nháy mắt.
+   - Sử dụng **Static Threshold = 0.1050** do Hiền cung cấp từ biểu đồ ROC để làm mốc xác định điểm đáy (trạng thái nhắm).
+   - **Quy luật dán nhãn chuyển động (Motion-based Labeling)**: Lưu ý quan trọng, dữ liệu gốc ở các frame chỉ gán nhãn tĩnh là `open` (mở) hoặc `closed` (nhắm). Nhưng bài toán của bạn là phát hiện **hành động chớp mắt (Blink)**. Hành động này được tính bắt đầu ngay từ lúc mí mắt bắt đầu di chuyển khép lại, chạm đáy, và sau đó mở lên, chứ không phải đợi đến khi mắt nhắm tịt mới gọi là chớp.
+   - Do đó, một cửa sổ 7 frames được gán nhãn `Blink` (1) khi nó bao gồm trọn vẹn chuỗi động lực học hình chữ V: **Bắt đầu từ frame có EAR cao (mắt đang mở) $\to$ EAR giảm dần (chuyển động khép mí) $\to$ Điểm đáy vượt qua ngưỡng 0.1050 (nhắm hoàn toàn) $\to$ EAR tăng trở lại (mở ra)**.
+   - Trái lại, nếu cửa sổ chỉ chứa các frame `closed` liên tục (EAR $< 0.1050$ trong toàn bộ 7 frames, ví dụ lúc ngủ gật), thì không có chuyển động nháy, bắt buộc phải dán nhãn `No-Blink` (0) hoặc `Long-Closure` (2) để mô hình không đếm sai.
 6. **Lưu kết quả**: Xuất file Numpy 3D (`X_train_seq.npy`, `y_train_seq.npy`, `X_test_seq.npy`, `y_test_seq.npy`).
