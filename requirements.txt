@@ -4,6 +4,7 @@
 # Computer Vision
 opencv-python>=4.8.0
 mediapipe==0.10.14
+protobuf>=4.25.3,<5
 
 # Data Processing
 numpy>=1.24.0
@@ -12,3 +13,5 @@ pandas>=2.0.0
 # Data Version Control
 dvc>=3.0.0
 dvc-gdrive>=2.20.0
+google-api-core<2.31.0
+
