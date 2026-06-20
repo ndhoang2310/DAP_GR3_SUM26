@@ -15,3 +15,8 @@ dvc>=3.0.0
 dvc-gdrive>=2.20.0
 google-api-core<2.31.0
 
+# Machine Learning & Deep Learning
+scikit-learn>=1.2.0
+tensorflow>=2.12.0
+
+
