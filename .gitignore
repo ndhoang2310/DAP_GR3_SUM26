@@ -33,10 +33,15 @@ desktop.ini
 data/
 dataset/
 dataset_master/
+
 # --- Trained Models (large binary files) ---
 models/*.pkl
 models/*.dat
 models/*.png
+
+processed_image/*.npy
+models/*.keras
+models/*.h5 
 
 # --- Logs & temp ---
 *.log
