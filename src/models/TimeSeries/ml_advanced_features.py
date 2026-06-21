@@ -72,6 +72,14 @@ def run_ml_advanced_features():
     for name, clf in models.items():
         clf.fit(X_train_adv, y_train)
         
+        # Tự động lưu mô hình tốt nhất (Gradient Boosting Tree=150, LR=0.10) để phục vụ chạy preview
+        if name == 'Gradient Boosting (Tree=150, LR=0.10)':
+            import joblib
+            save_dir = os.path.join('dataset_master', 'models')
+            os.makedirs(save_dir, exist_ok=True)
+            joblib.dump(clf, os.path.join(save_dir, 'best_traditional_model.pkl'))
+            print(f"  • [LƯU MÔ HÌNH] Đã lưu mô hình tốt nhất tại: {os.path.join(save_dir, 'best_traditional_model.pkl')}")
+            
         start_time = time.time()
         y_pred = clf.predict(X_test_adv)
         inf_time = time.time() - start_time

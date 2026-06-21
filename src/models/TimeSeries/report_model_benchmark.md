@@ -26,7 +26,12 @@
 >    ```bash
 >    python src/models/TimeSeries/main_benchmark.py
 >    ```
-**Sau khi chạy sẽ xuất ra file kết quả tại dataset_master\benchmark_results.csv để đánh giá.**
+>    *Sau khi chạy sẽ xuất ra file kết quả tại `dataset_master\benchmark_results.csv` để đánh giá.*
+> 5. **Chạy Demo tương tác thời gian thực (Real-Time Preview):**
+>    ```bash
+>    python src/models/TimeSeries/realtime_preview.py
+>    ```
+>    *Xem hướng dẫn tương tác chi tiết ở cuối file.*
 
 
 **Thành viên thực hiện:** Hiền (Pipeline Engineer - Hướng 2)  
@@ -126,3 +131,24 @@ Mặc dù mô hình tốt nhất (**Gradient Boosting trên 26 đặc trưng**) 
 
 3. **Kiến trúc Hybrid để tối ưu phần cứng:**
    * Triển khai giải pháp **Hybrid với ngưỡng $t = 0.2$**. Bằng cách áp dụng công thức sàng lọc heuristic $\min(w) \ge 0.2$, hệ thống có thể bỏ qua toàn bộ bước trích xuất đặc trưng động lực học phức tạp và suy luận mô hình Random Forest cho **62.5%** số cửa sổ mở mắt bình thường. Điều này giúp tối ưu hóa phần cứng hiệu quả, chạy mát hơn, tiết kiệm pin và giảm độ trễ xử lý trong thời gian thực.
+
+---
+
+## 5. Hướng dẫn chạy Demo thời gian thực (Real-Time Preview)
+
+Để kiểm chứng hiệu năng và trải nghiệm người dùng thực tế của mô hình (Gradient Boosting Adv kết hợp bộ lọc Hybrid và hậu xử lý thời gian), bạn có thể chạy script Demo tương tác thời gian thực:
+
+```bash
+# Sử dụng Webcam mặc định (Webcam index 0)
+python src/models/TimeSeries/realtime_preview.py
+
+# Hoặc truyền vào file video đã quay sẵn
+python src/models/TimeSeries/realtime_preview.py --input path/to/video.mp4
+```
+
+**Tính năng nổi bật trong Demo:**
+* **Tự động hiệu chuẩn (Calibration):** 100 khung hình đầu tiên sẽ tự học dải EAR mở/nhắm của mắt bạn để cá nhân hóa ngưỡng của từng người. (Bấm phím `r` để reset hiệu chuẩn).
+* **HUD giám sát hiệu năng:** Hiển thị trực quan tốc độ camera (Webcam FPS), tốc độ lấy mẫu chuẩn (15 FPS), thanh EAR Bar và tỉ lệ tiết kiệm phần cứng của bộ lọc Hybrid (`CPU Saved %`).
+* **Khử nhiễu thực tế:** Chỉ báo ngủ gật khi nhắm mắt liên tục $>0.67$ giây (tránh báo động giả khi chớp mắt nhanh hoặc nheo mắt).
+* **Che 1 mắt vẫn chạy tốt:** Tích hợp bộ lọc lấy giá trị nhỏ nhất của 2 mắt giúp hệ thống vẫn theo dõi được cú chớp/nhắm của mắt còn lại khi một bên bị che khuất.
+
