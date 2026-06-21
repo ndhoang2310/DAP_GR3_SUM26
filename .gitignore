@@ -1,8 +1,8 @@
 # ============================================================
-# Eye Blink Detection - .gitignore
+# Eye Blink Detection - .gitignore 
 # ============================================================
 
-# --- Python ---
+# --- Python & Environment ---
 __pycache__/
 *.py[cod]
 *$py.class
@@ -11,43 +11,44 @@ __pycache__/
 dist/
 build/
 *.egg
-
-# --- Virtual Environment ---
 venv/
 env/
 .venv/
 
-# --- IDE ---
+# --- IDE & OS ---
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
-# --- OS ---
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# --- Data & Dataset (too large for git) ---
-data/
+# --- Data & Dataset ---
+# Chặn các file zip và dữ liệu thô/đã xử lý
+*.zip
 dataset/
 dataset_master/
+processed_image/*.npy
+data/
 
-# --- Trained Models (large binary files) ---
+# --- Trained Models (Binary files) ---
 models/*.pkl
+models/*.keras
+models/*.h5
 models/*.dat
 models/*.png
+blink_model.pkl
 
-processed_image/*.npy
-models/*.keras
-models/*.h5 
+# --- DVC (Data Version Control) ---
+.dvc/
+.dvcignore
 
-# --- Logs & temp ---
+
+
+# --- Logs, Temp & Jupyter ---
 *.log
 *.tmp
-
-# --- Jupyter ---
 .ipynb_checkpoints/
-/dataset
-/dataset_master
+/processed_image
