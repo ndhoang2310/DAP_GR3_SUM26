@@ -5,49 +5,62 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
 
 def extract_advanced_features_single(w):
+    """
+    Trích xuất 12 đặc trưng động học độc lập (loại bỏ hoàn toàn collinearity):
+    - 7 giá trị EAR thô trong window
+    - min_val (phi tuyến)
+    - max_val (phi tuyến)
+    - std_val (phi tuyến)
+    - ratio_center (tỷ lệ - phi tuyến)
+    - kurtosis (độ nhọn - phi tuyến)
+    """
     min_val = np.min(w)
     max_val = np.max(w)
-    mean_val = np.mean(w)
     std_val = np.std(w)
-    rng_val = max_val - min_val
-    
-    drop_left = w[0] - w[3]
-    drop_right = w[6] - w[3]
     ratio_center = (w[0] + w[6]) / (2 * w[3] + 1e-5)
     
-    diff1 = np.diff(w)
-    diff2 = np.diff(diff1)
-    
+    # Kurtosis
+    mean_val = np.mean(w)
+    if std_val > 1e-5:
+        kurtosis = np.mean(((w - mean_val) / std_val) ** 4) - 3.0
+    else:
+        kurtosis = 0.0
+        
     feat = np.concatenate([
         w,
-        [min_val, max_val, mean_val, std_val, rng_val, drop_left, drop_right, ratio_center],
-        diff1,
-        diff2
+        [min_val, max_val, std_val, ratio_center, kurtosis]
     ])
     return feat
 
-def run_hybrid_system():
+def run_hybrid_system(best_model=None, feature_type='advanced_12feature'):
     data_dir = os.path.join('dataset_master', 'processed_seq')
     X_train = np.load(os.path.join(data_dir, 'X_train_seq.npy'))
     y_train = np.load(os.path.join(data_dir, 'y_train_seq.npy'))
     X_test = np.load(os.path.join(data_dir, 'X_test_seq.npy'))
     y_test = np.load(os.path.join(data_dir, 'y_test_seq.npy'))
     
-    X_train_flat = X_train.squeeze(-1)
     X_test_flat = X_test.squeeze(-1)
     
-    # 1. Trích xuất đặc trưng nâng cao cho tập Train để huấn luyện RF
-    X_train_adv = np.array([extract_advanced_features_single(w) for w in X_train_flat])
+    # 1. Khởi tạo model chạy chính
+    if best_model is None:
+        X_train_flat = X_train.squeeze(-1)
+        X_train_adv = np.array([extract_advanced_features_single(w) for w in X_train_flat])
+        print("\n--- Training Random Forest model for Hybrid system (Fallback) ---")
+        rf = RandomForestClassifier(n_estimators=100, max_depth=12, class_weight='balanced', random_state=42)
+        rf.fit(X_train_adv, y_train)
+        best_model = rf
+        feature_type = 'advanced_12feature'
+        model_name_tag = "RF"
+    else:
+        underlying_model = best_model.steps[-1][1] if hasattr(best_model, 'steps') else best_model
+        model_name_tag = type(underlying_model).__name__.replace("Classifier", "")
+        print(f"\n--- Running Hybrid System with best model: {model_name_tag} using {feature_type} ---")
     
-    print("\n--- Đang huấn luyện mô hình Random Forest cho hệ thống Hybrid ---")
-    rf = RandomForestClassifier(n_estimators=150, max_depth=10, class_weight='balanced', random_state=42)
-    rf.fit(X_train_adv, y_train)
-    
-    # 2. Định nghĩa các ngưỡng lọc Heuristic t khác nhau
+    # 2. Define different heuristic filter thresholds t
     thresholds = [0.2, 0.3, 0.35, 0.4, 0.5]
     results = []
     
-    print("\n--- Đang đánh giá hệ thống Hybrid ---")
+    print("\n--- Evaluating Hybrid system ---")
     for t in thresholds:
         start_time = time.time()
         y_pred = []
@@ -58,8 +71,11 @@ def run_hybrid_system():
             is_suspicious = np.min(w) < t
             
             if is_suspicious:
-                feat = extract_advanced_features_single(w)
-                pred = rf.predict([feat])[0]
+                if feature_type == 'advanced_12feature':
+                    feat = extract_advanced_features_single(w)
+                else:
+                    feat = w
+                pred = best_model.predict([feat])[0]
                 y_pred.append(pred)
                 ml_runs += 1
             else:
@@ -74,7 +90,7 @@ def run_hybrid_system():
         skip_percent = (1 - (ml_runs / len(X_test_flat))) * 100
         
         results.append({
-            'model_name': f"Hybrid (Filter + RF)",
+            'model_name': f"Hybrid (Filter + {model_name_tag})",
             'feature_type': 'hybrid_ear_norm',
             'config': f"threshold={t}_skip_ml={skip_percent:.1f}%",
             'accuracy': acc,
@@ -90,7 +106,7 @@ def run_hybrid_system():
             'macro_f1': report['macro avg']['f1-score'],
             'inference_time': inf_time
         })
-        print(f" • Ngưỡng t: {t:<4} | Tiết kiệm CPU: {skip_percent:.1f}% | Accuracy: {acc:.4f} | Macro F1: {report['macro avg']['f1-score']:.4f}")
+        print(f" • Threshold t: {t:<4} | CPU Saved: {skip_percent:.1f}% | Accuracy: {acc:.4f} | Macro F1: {report['macro avg']['f1-score']:.4f}")
         
     return results
 

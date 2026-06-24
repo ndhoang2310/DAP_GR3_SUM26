@@ -41,7 +41,7 @@ def compute_ear(eye_points):
     return (v1 + v2) / (2.0 * h)
 
 def extract_advanced_features_single(w):
-    """Extract 26 advanced dynamic features from a 7-frame EAR window."""
+    """Extract 28 advanced dynamic features from a 7-frame EAR window."""
     min_val = np.min(w)
     max_val = np.max(w)
     mean_val = np.mean(w)
@@ -55,11 +55,19 @@ def extract_advanced_features_single(w):
     diff1 = np.diff(w)
     diff2 = np.diff(diff1)
     
+    # --- New Optimized Features ---
+    if std_val > 1e-5:
+        kurtosis = np.mean(((w - mean_val) / std_val) ** 4) - 3.0
+    else:
+        kurtosis = 0.0
+    slope_trend = (w[-1] - w[0]) / 6.0
+    
     feat = np.concatenate([
         w,
         [min_val, max_val, mean_val, std_val, rng_val, drop_left, drop_right, ratio_center],
         diff1,
-        diff2
+        diff2,
+        [kurtosis, slope_trend]
     ])
     return feat
 
@@ -88,6 +96,33 @@ def main():
     try:
         model = joblib.load(args.model)
         print(f"[SUCCESS] Model loaded: {type(model)}")
+        
+        # Determine model tag dynamically for HUD display
+        if hasattr(model, "steps"):  # It's a scikit-learn Pipeline
+            underlying_model = model.steps[-1][1]
+        else:
+            underlying_model = model
+        
+        model_name_class = type(underlying_model).__name__
+        if "RandomForest" in model_name_class:
+            model_tag = "RF"
+        elif "GradientBoosting" in model_name_class:
+            model_tag = "GB"
+        elif "SVC" in model_name_class:
+            model_tag = "SVM"
+        elif "KNeighbors" in model_name_class:
+            model_tag = "KNN"
+        else:
+            model_tag = "ML"
+        print(f"[INFO] Detected model type: {model_tag} ({model_name_class})")
+        # Determine number of input features expected by the model
+        if hasattr(model, "n_features_in_"):
+            num_features = model.n_features_in_
+        elif hasattr(underlying_model, "n_features_in_"):
+            num_features = underlying_model.n_features_in_
+        else:
+            num_features = 28
+        print(f"[INFO] Model expects {num_features} input features.")
     except Exception as e:
         print(f"[ERROR] Failed to load model: {e}")
         sys.exit(1)
@@ -114,6 +149,7 @@ def main():
     # Window sizes and histories
     window_size = 7
     ear_history = deque(maxlen=window_size)
+    ear_history_long = deque(maxlen=15) # Keep a longer history for peak/valley detection
     pred_history = deque(maxlen=15) # Extended history for better temporal smoothing (approx 1 second at 15 FPS)
     
     # Dynamic Calibration parameters
@@ -130,7 +166,8 @@ def main():
     
     # State tracking
     blink_count = 0
-    in_blink_event = False
+    frame_counter = 0
+    counted_blink_frames = set()
     
     # FPS Measurement & Time-based Sampling
     start_fps_time = time.time()
@@ -225,7 +262,31 @@ def main():
                 current_time = time.time()
                 if current_time - last_sample_time >= sampling_interval:
                     ear_history.append(ear_norm)
+                    ear_history_long.append(ear_norm)
+                    frame_counter += 1
                     last_sample_time = current_time
+                    
+                    # --- VALLEY DETECTION BLINK COUNTING (Protects against double/triple rapid blinks) ---
+                    w_len = len(ear_history_long)
+                    if w_len >= 3:
+                        for i in range(1, w_len - 1):
+                            # Look for local minimum (valley) in EAR sequence
+                            if ear_history_long[i] < ear_history_long[i-1] and ear_history_long[i] < ear_history_long[i+1]:
+                                if ear_history_long[i] < 0.35: # Threshold for eye closure depth
+                                    abs_frame = frame_counter - (w_len - 1 - i)
+                                    if abs_frame not in counted_blink_frames:
+                                        too_close = False
+                                        for past_frame in counted_blink_frames:
+                                            # Minimum 2 frames distance (~0.13 seconds) to filter noise/multiple peaks in one blink
+                                            if abs(abs_frame - past_frame) <= 2: 
+                                                too_close = True
+                                                break
+                                        if not too_close:
+                                            blink_count += 1
+                                            counted_blink_frames.add(abs_frame)
+                                            # Keep the counted set small to avoid memory leak
+                                            old_threshold = frame_counter - 100
+                                            counted_blink_frames = {f for f in counted_blink_frames if f > old_threshold}
                     
                     # 3. Model Inference (Sliding Window size 7)
                     if len(ear_history) == window_size:
@@ -240,9 +301,12 @@ def main():
                             skipped_ml_count += 1
                             cpu_mode = "Filter (Skipped ML - 100% Save)"
                         else:
-                            feat = extract_advanced_features_single(w_arr)
+                            if num_features == 28:
+                                feat = extract_advanced_features_single(w_arr)
+                            else:
+                                feat = w_arr
                             pred = model.predict([feat])[0]
-                            cpu_mode = f"ML Inference (Active - GB)"
+                            cpu_mode = f"ML Inference (Active - {model_tag})"
                         
                         pred_history.append(pred)
                         
@@ -255,18 +319,9 @@ def main():
                         elif pred == 1:
                             current_status = "BLINKING"
                             color_status = (255, 255, 0) # Cyan/Yellow-Green
-                            
-                            # Increment blink count on rising edge
-                            if not in_blink_event:
-                                blink_count += 1
-                                in_blink_event = True
                         else:
                             current_status = "NORMAL (EYE OPEN)"
                             color_status = (0, 255, 0) # Green
-                            
-                        # Reset blink event state when eye opens
-                        if pred == 0:
-                            in_blink_event = False
                 else:
                     pass
         else:

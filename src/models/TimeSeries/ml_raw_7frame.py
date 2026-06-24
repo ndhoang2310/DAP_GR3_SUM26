@@ -2,9 +2,12 @@ import os
 import time
 import numpy as np
 from sklearn.svm import SVC
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier, ExtraTreesClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import classification_report, accuracy_score
@@ -36,12 +39,14 @@ def run_ml_raw_7frame():
         'KNN (K=5)': make_pipeline(StandardScaler(), KNeighborsClassifier(n_neighbors=5)),
         'KNN (K=7)': make_pipeline(StandardScaler(), KNeighborsClassifier(n_neighbors=7)),
         'Decision Tree (Depth=5)': DecisionTreeClassifier(max_depth=5, class_weight='balanced', random_state=42),
-        'Decision Tree (Depth=8)': DecisionTreeClassifier(max_depth=8, class_weight='balanced', random_state=42)
+        'Decision Tree (Depth=8)': DecisionTreeClassifier(max_depth=8, class_weight='balanced', random_state=42),
+        'Logistic Regression (balanced)': make_pipeline(StandardScaler(), LogisticRegression(solver='lbfgs', max_iter=1000, class_weight='balanced', random_state=42)),
+        'Naive Bayes (Gaussian)': GaussianNB()
     }
     
     results = []
     
-    print("\n--- Đang huấn luyện và đánh giá trên 7 đặc trưng EAR thô ---")
+    print("\n--- Training and evaluating models on 7 raw EAR features ---")
     for name, clf in models.items():
         # Huấn luyện mô hình
         clf.fit(X_train_flat, y_train)
@@ -77,7 +82,7 @@ def run_ml_raw_7frame():
         })
         print(f" • Model: {name:<35} | Accuracy: {acc:.4f} | Macro F1: {report['macro avg']['f1-score']:.4f}")
         
-    return results
+    return results, models
 
 if __name__ == '__main__':
     run_ml_raw_7frame()

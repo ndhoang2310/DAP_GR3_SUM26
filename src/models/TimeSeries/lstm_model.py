@@ -36,21 +36,21 @@ def extract_3d_sequence_features(X_seq):
 
 def run_lstm_training():
     if not HAS_TF:
-        print("\n[CẢNH BÁO] Chưa cài đặt 'tensorflow'. Bỏ qua huấn luyện LSTM trong benchmark.")
-        return []
+        print("\n[WARNING] 'tensorflow' is not installed. Skipping LSTM training in benchmark.")
+        return [], None
         
-    print("\n--- Đang tải dữ liệu chuỗi EAR cho mô hình LSTM (Option B - 3D Features) ---")
+    print("\n[INFO] Loading EAR sequences for LSTM (Option B - 3D Features)...")
     data_dir = os.path.join('dataset_master', 'processed_seq')
     X_train = np.load(os.path.join(data_dir, 'X_train_seq.npy'))
     y_train = np.load(os.path.join(data_dir, 'y_train_seq.npy'))
     X_test = np.load(os.path.join(data_dir, 'X_test_seq.npy'))
     y_test = np.load(os.path.join(data_dir, 'y_test_seq.npy'))
     
-    # Trích xuất đặc trưng 3D (samples, 7, 3)
+    # Extract 3D sequence features (samples, 7, 3)
     X_train_3d = extract_3d_sequence_features(X_train)
     X_test_3d = extract_3d_sequence_features(X_test)
     
-    # Định nghĩa mô hình LSTM
+    # Define LSTM model
     model = Sequential([
         Input(shape=(7, 3)),
         LSTM(16, return_sequences=False),
@@ -70,17 +70,17 @@ def run_lstm_training():
         restore_best_weights=True
     )
     
-    print(" Đang train mô hình LSTM...")
+    print("[INFO] Training LSTM model...")
     model.fit(
         X_train_3d, y_train,
         epochs=40,
         batch_size=32,
         validation_split=0.15,
         callbacks=[early_stop],
-        verbose=0 # Tắt log huấn luyện chi tiết để tránh rác console khi chạy main
+        verbose=0 # Disable detailed logs to keep console clean
     )
     
-    # Dự đoán và đo thời gian
+    # Inference and timing
     start_time = time.time()
     y_pred_probs = model.predict(X_test_3d, verbose=0)
     inf_time = time.time() - start_time
@@ -89,12 +89,12 @@ def run_lstm_training():
     acc = accuracy_score(y_test, y_pred)
     report = classification_report(y_test, y_pred, output_dict=True, zero_division=0)
     
-    # Lưu mô hình
+    # Save model
     save_dir = os.path.join('dataset_master', 'models')
     os.makedirs(save_dir, exist_ok=True)
     model.save(os.path.join(save_dir, 'lstm_blink_model.h5'))
     
-    print(f" Hoàn thành! LSTM Accuracy: {acc:.4f} | Macro F1: {report['macro avg']['f1-score']:.4f}")
+    print(f"[SUCCESS] Done! LSTM Accuracy: {acc:.4f} | Macro F1: {report['macro avg']['f1-score']:.4f}")
     
     return [{
         'model_name': 'DL - LSTM (Option B)',
@@ -112,7 +112,7 @@ def run_lstm_training():
         'f1_2': report['2']['f1-score'],
         'macro_f1': report['macro avg']['f1-score'],
         'inference_time': inf_time
-    }]
+    }], model
 
 if __name__ == '__main__':
     run_lstm_training()
