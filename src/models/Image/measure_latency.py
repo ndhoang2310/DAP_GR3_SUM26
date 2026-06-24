@@ -1,43 +1,57 @@
-import numpy as np
-import joblib
+import sys
 import time
 from pathlib import Path
-from tensorflow.keras.models import load_model
-import sys
 
-# Setup path
+import joblib
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+
 base_dir = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(base_dir))
+
 import config
 
-def measure_latency():
-    # Load data
+
+NUM_SAMPLES = 100
+
+
+def main():
     processed_dir = Path(config.CNN_PROCESSED_DIR)
-    X_test_cnn = np.load(processed_dir / "X_test_cnn.npy")[:100] # Test 100 mẫu
-    X_test_img = np.load(processed_dir / "X_test_img.npy")[:100]
+    model_dir = Path(config.MODEL_SAVE_PATH)
 
-    # Load models
-    svm_model = joblib.load(Path(config.MODEL_SAVE_PATH) / "svm_model.pkl")
-    cnn_model = load_model(Path(config.MODEL_SAVE_PATH) / "cnn_blink_model.keras")
+    X_test_img = np.load(processed_dir / "X_test_img.npy")[:NUM_SAMPLES]
+    X_test_cnn = np.load(processed_dir / "X_test_cnn.npy")[:NUM_SAMPLES]
 
-    # Đo SVM
+    svm_model = joblib.load(model_dir / "svm_model.pkl")
+
+    cnn_model_path = model_dir / "best_cnn.keras"
+    if not cnn_model_path.exists():
+        cnn_model_path = model_dir / "cnn_blink_model.keras"
+    cnn_model = load_model(cnn_model_path)
+
+    print("===== LATENCY MEASUREMENT =====")
+    print(f"Samples: {len(X_test_img)}")
+
+    # SVM latency
     start = time.perf_counter()
     for i in range(len(X_test_img)):
-        svm_model.predict(X_test_img[i:i+1])
-    svm_latency = (time.perf_counter() - start) / len(X_test_img) * 1000
+        _ = svm_model.predict(X_test_img[i:i + 1])
+    svm_latency_ms = (time.perf_counter() - start) / len(X_test_img) * 1000
 
-    # Đo CNN
-    # Lần đầu CNN chạy thường chậm do khởi tạo, ta bỏ qua lần dự đoán đầu
-    cnn_model.predict(X_test_cnn[:1], verbose=0) 
-    
+    # CNN warm-up
+    warmup = tf.convert_to_tensor(X_test_cnn[:1])
+    _ = cnn_model(warmup, training=False)
+
     start = time.perf_counter()
     for i in range(len(X_test_cnn)):
-        cnn_model.predict(X_test_cnn[i:i+1], verbose=0)
-    cnn_latency = (time.perf_counter() - start) / len(X_test_cnn) * 1000
+        sample = tf.convert_to_tensor(X_test_cnn[i:i + 1])
+        _ = cnn_model(sample, training=False)
+    cnn_latency_ms = (time.perf_counter() - start) / len(X_test_cnn) * 1000
 
-    print(f"--- ĐỘ TRỄ TRUNG BÌNH (Mỗi ảnh) ---")
-    print(f"SVM Latency: {svm_latency:.4f} ms")
-    print(f"CNN Latency: {cnn_latency:.4f} ms")
+    print(f"SVM Latency: {svm_latency_ms:.4f} ms/image")
+    print(f"CNN Latency: {cnn_latency_ms:.4f} ms/image")
+
 
 if __name__ == "__main__":
-    measure_latency()
+    main()

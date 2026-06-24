@@ -6,8 +6,12 @@ def get_cnn_model(input_shape=(24, 24, 1)):
     Kiến trúc CNN tối ưu cho bài toán nhận diện đóng/mở mắt.
     """
     data_aug = tf.keras.Sequential([
-    layers.RandomRotation(0.02),
-    layers.RandomZoom(0.05)
+        layers.RandomRotation(0.02),
+        layers.RandomZoom(0.05),
+        layers.RandomTranslation(
+            0.05,
+            0.05
+        )
     ])
     model = models.Sequential([
         layers.Input(shape=input_shape),

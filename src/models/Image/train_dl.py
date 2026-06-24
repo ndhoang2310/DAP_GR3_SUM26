@@ -3,7 +3,6 @@ import joblib
 import numpy as np
 import random
 import tensorflow as tf
-import numpy as np
 from pathlib import Path
 from sklearn.utils.class_weight import compute_class_weight
 from sklearn.metrics import (
@@ -11,7 +10,6 @@ from sklearn.metrics import (
     confusion_matrix,
     accuracy_score,
     roc_auc_score)
-import tensorflow as tf
 from tensorflow.keras.callbacks import (
     EarlyStopping,
     ModelCheckpoint)
@@ -94,13 +92,14 @@ def train_dl():
     )
     model.compile(
         optimizer=tf.keras.optimizers.Adam(
-            learning_rate=config.LEARNING_RATE
+            learning_rate=0.0003
         ),
         loss="binary_crossentropy",
         metrics=[
             "accuracy",
             tf.keras.metrics.Precision(name="precision"),
-            tf.keras.metrics.Recall(name="recall")
+            tf.keras.metrics.Recall(name="recall"),
+            tf.keras.metrics.AUC(name="auc")
         ]
     )
 
@@ -113,16 +112,20 @@ def train_dl():
     # ------------------------------------------------------
 
     early_stop = EarlyStopping(
-        monitor="val_loss",
-        patience=5,
+        monitor="val_auc",
+        mode="max",
+        patience=10,
         restore_best_weights=True,
-        verbose=1)
+        verbose=1
+    )
 
     checkpoint = ModelCheckpoint(
         Path(config.MODEL_SAVE_PATH) / "best_cnn.keras",
-        monitor="val_loss",
+        monitor="val_auc",
+        mode="max",
         save_best_only=True,
-        verbose=1)
+        verbose=1
+    )
 
     # ------------------------------------------------------
     # TRAINING
@@ -136,7 +139,6 @@ def train_dl():
         validation_data=(X_val, y_val),
         epochs=config.EPOCHS,
         batch_size=config.BATCH_SIZE,
-        class_weight=class_weights,
         callbacks=[
             early_stop,
             checkpoint],
@@ -163,6 +165,15 @@ def train_dl():
     print("\n===== TEST EVALUATION =====")
 
     y_pred_prob = model.predict(X_test,verbose=0)
+    print("\nPrediction probability stats:")
+    print(f"Min prob : {y_pred_prob.min():.4f}")
+    print(f"Max prob : {y_pred_prob.max():.4f}")
+    print(f"Mean prob: {y_pred_prob.mean():.4f}")
+    print(f"Median  : {np.median(y_pred_prob):.4f}")
+
+    print("\nProbability percentiles:")
+    for p in [1, 5, 10, 25, 50, 75, 90, 95, 99]:
+        print(f"P{p:02d}: {np.percentile(y_pred_prob, p):.4f}")
 
     y_pred = (y_pred_prob > 0.5).astype(int)
 

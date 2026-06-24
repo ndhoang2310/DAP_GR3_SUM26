@@ -39,24 +39,23 @@ def print_evaluation(y_test, y_pred, y_pred_prob):
     print(f"True Closed    {cm[1][0]}      {cm[1][1]}")
 
 
-def train_ml():
+def train_ml_hog_only():
     base_dir = Path(__file__).resolve().parent.parent.parent.parent
     processed_dir = base_dir / "processed_image"
     model_dir = base_dir / "models"
     model_dir.mkdir(parents=True, exist_ok=True)
 
-    print("===== TRAINING SVM: HOG + EAR =====")
+    print("===== TRAINING SVM: HOG ONLY =====")
     print(f"Loading data from: {processed_dir}")
 
-    X_train = np.load(processed_dir / "X_train_img.npy")
-    y_train = np.load(processed_dir / "y_train_img.npy")
-    X_test = np.load(processed_dir / "X_test_img.npy")
-    y_test = np.load(processed_dir / "y_test_img.npy")
+    X_train = np.load(processed_dir / "X_train_hog_only.npy")
+    y_train = np.load(processed_dir / "y_train_hog_only.npy")
+    X_test = np.load(processed_dir / "X_test_hog_only.npy")
+    y_test = np.load(processed_dir / "y_test_hog_only.npy")
 
     print(f"Train: {X_train.shape}, distribution={dict(zip(*np.unique(y_train, return_counts=True)))}")
     print(f"Test : {X_test.shape}, distribution={dict(zip(*np.unique(y_test, return_counts=True)))}")
 
-    # class_weight is intentionally removed because preprocessing already applies SMOTE on train only.
     model = SVC(
         kernel="rbf",
         C=10,
@@ -71,10 +70,10 @@ def train_ml():
 
     print_evaluation(y_test, y_pred, y_pred_prob)
 
-    model_path = model_dir / "svm_model.pkl"
+    model_path = model_dir / "svm_hog_only_model.pkl"
     joblib.dump(model, model_path)
     print(f"\nModel saved at: {model_path}")
 
 
 if __name__ == "__main__":
-    train_ml()
+    train_ml_hog_only()

@@ -1,4 +1,3 @@
-import os
 import sys
 from pathlib import Path
 
@@ -20,7 +19,7 @@ import config
 
 
 OUTPUT_DIR = Path(config.CNN_PROCESSED_DIR)
-RESIZE_FOR_HOG = True  # Keep HOG feature size stable. If your eye crops are already 24x24, this does not change them.
+RESIZE_FOR_HOG = True
 
 
 def extract_hog_features(img: np.ndarray) -> np.ndarray:
@@ -33,7 +32,7 @@ def extract_hog_features(img: np.ndarray) -> np.ndarray:
     )
 
 
-def load_features_from_split(split_csv: Path, use_ear: bool = True):
+def load_hog_only_features(split_csv: Path):
     df = pd.read_csv(split_csv)
 
     X, y = [], []
@@ -55,14 +54,7 @@ def load_features_from_split(split_csv: Path, use_ear: bool = True):
             img = cv2.resize(img, tuple(config.IMAGE_SIZE))
 
         img = img.astype(np.float32) / 255.0
-        hog_feature = extract_hog_features(img)
-
-        if use_ear:
-            if "ear_avg" not in row or pd.isna(row["ear_avg"]):
-                raise ValueError(f"Missing ear_avg for image: {image_path}")
-            feature_vector = np.concatenate([hog_feature, [float(row["ear_avg"])]]).astype(np.float32)
-        else:
-            feature_vector = hog_feature.astype(np.float32)
+        feature_vector = extract_hog_features(img).astype(np.float32)
 
         label = 0 if row["final_label"] == "open" else 1
         X.append(feature_vector)
@@ -83,12 +75,12 @@ def main() -> None:
     if not train_csv.exists() or not test_csv.exists():
         raise FileNotFoundError("Run create_image_split.py first to create train_split.csv and test_split.csv.")
 
-    print("===== SVM PREPROCESSING: HOG + EAR =====")
+    print("===== SVM PREPROCESSING: HOG ONLY =====")
     print("Loading train split...")
-    X_train, y_train = load_features_from_split(train_csv, use_ear=True)
+    X_train, y_train = load_hog_only_features(train_csv)
 
     print("Loading test split...")
-    X_test, y_test = load_features_from_split(test_csv, use_ear=True)
+    X_test, y_test = load_hog_only_features(test_csv)
 
     print(f"Train before SMOTE: {X_train.shape}")
     print(f"Test             : {X_test.shape}")
@@ -104,11 +96,11 @@ def main() -> None:
     smote = SMOTE(random_state=42)
     X_train_resampled, y_train_resampled = smote.fit_resample(X_train_scaled, y_train)
 
-    np.save(OUTPUT_DIR / "X_train_img.npy", X_train_resampled)
-    np.save(OUTPUT_DIR / "y_train_img.npy", y_train_resampled)
-    np.save(OUTPUT_DIR / "X_test_img.npy", X_test_scaled)
-    np.save(OUTPUT_DIR / "y_test_img.npy", y_test)
-    joblib.dump(scaler, OUTPUT_DIR / "scaler_img.pkl")
+    np.save(OUTPUT_DIR / "X_train_hog_only.npy", X_train_resampled)
+    np.save(OUTPUT_DIR / "y_train_hog_only.npy", y_train_resampled)
+    np.save(OUTPUT_DIR / "X_test_hog_only.npy", X_test_scaled)
+    np.save(OUTPUT_DIR / "y_test_hog_only.npy", y_test)
+    joblib.dump(scaler, OUTPUT_DIR / "scaler_hog_only.pkl")
 
     print("\nDone.")
     print("Final train distribution after SMOTE:", dict(zip(*np.unique(y_train_resampled, return_counts=True))))
