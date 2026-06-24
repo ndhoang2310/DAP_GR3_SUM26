@@ -13,7 +13,7 @@ from sklearn.metrics import classification_report, accuracy_score
 
 def extract_advanced_features_single(w):
     """
-    Trích xuất 12 đặc trưng động học độc lập (loại bỏ hoàn toàn collinearity):
+    Trích xuất 12 đặc trưng động học độc lập (loại bỏ hoàn toàn linearity):
     - 7 giá trị EAR thô trong window
     - min_val (phi tuyến)
     - max_val (phi tuyến)
@@ -41,10 +41,16 @@ def extract_advanced_features_single(w):
 
 def run_ml_advanced_features():
     data_dir = os.path.join('dataset_master', 'processed_seq')
-    X_train = np.load(os.path.join(data_dir, 'X_train_seq.npy'))
-    y_train = np.load(os.path.join(data_dir, 'y_train_seq.npy'))
+    X_train_sub = np.load(os.path.join(data_dir, 'X_train_seq.npy'))
+    y_train_sub = np.load(os.path.join(data_dir, 'y_train_seq.npy'))
+    X_val = np.load(os.path.join(data_dir, 'X_val_seq.npy'))
+    y_val = np.load(os.path.join(data_dir, 'y_val_seq.npy'))
     X_test = np.load(os.path.join(data_dir, 'X_test_seq.npy'))
     y_test = np.load(os.path.join(data_dir, 'y_test_seq.npy'))
+    
+    # Concatenate train_sub and val to train on the full training set (20 videos)
+    X_train = np.concatenate([X_train_sub, X_val], axis=0)
+    y_train = np.concatenate([y_train_sub, y_val], axis=0)
     
     # Phẳng hóa thành 2D
     X_train_flat = X_train.squeeze(-1)

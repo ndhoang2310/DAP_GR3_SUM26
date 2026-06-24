@@ -71,6 +71,24 @@ def extract_advanced_features_single(w):
     ])
     return feat
 
+def extract_advanced_12_features_single(w):
+    """Trích xuất 12 đặc trưng động học độc lập (loại bỏ hoàn toàn collinearity)."""
+    min_val = np.min(w)
+    max_val = np.max(w)
+    std_val = np.std(w)
+    ratio_center = (w[0] + w[6]) / (2 * w[3] + 1e-5)
+    mean_val = np.mean(w)
+    if std_val > 1e-5:
+        kurtosis = np.mean(((w - mean_val) / std_val) ** 4) - 3.0
+    else:
+        kurtosis = 0.0
+        
+    feat = np.concatenate([
+        w,
+        [min_val, max_val, std_val, ratio_center, kurtosis]
+    ])
+    return feat
+
 def main():
     parser = argparse.ArgumentParser(description="Real-time TimeSeries EAR model preview.")
     parser.add_argument(
@@ -152,11 +170,10 @@ def main():
     ear_history_long = deque(maxlen=15) # Keep a longer history for peak/valley detection
     pred_history = deque(maxlen=15) # Extended history for better temporal smoothing (approx 1 second at 15 FPS)
     
-    # Dynamic Calibration parameters
-    calibration_frames = 100
+    # Dynamic Calibration parameters (expanding_max)
+    calibration_frames = 15
     calibration_ears = []
-    min_ear = 0.15
-    max_ear = 0.35
+    calib_baseline = 0.25
     is_calibrated = False
     
     # Persistent status state to prevent UI flickering
@@ -228,34 +245,31 @@ def main():
             
             # --- FIX: ROBUST SINGLE-EYE OCCLUSION HANDLING ---
             # Instead of taking the average, we take the minimum of both eyes.
-            # If one eye is covered, MediaPipe will predict a fake "open" state for it.
-            # Taking the minimum ensures we follow the active (open/blinking) eye.
             ear_avg = min(ear_left, ear_right)
             
             # Draw eye landmarks on screen
             for pt in np.vstack([left_eye_pts, right_eye_pts]):
                 cv2.circle(frame, (int(pt[0]), int(pt[1])), 1, (0, 255, 0), -1)
             
-            # 2. Dynamic calibration of min/max EAR
+            # 2. Dynamic calibration of EAR baseline (expanding_max)
             if not is_calibrated:
                 calibration_ears.append(ear_avg)
-                current_status = f"Calibrating ({len(calibration_ears)}/{calibration_frames})"
+                current_status = "Initializing..."
                 color_status = (0, 255, 255)
                 
                 if len(calibration_ears) >= calibration_frames:
-                    min_ear = np.percentile(calibration_ears, 5) # 5th percentile as closed eye reference
-                    max_ear = np.percentile(calibration_ears, 95) # 95th percentile as fully open eye
-                    if max_ear == min_ear:
-                        max_ear = min_ear + 0.1
+                    calib_baseline = np.max(calibration_ears)
+                    if np.isnan(calib_baseline) or calib_baseline < 0.18:
+                        calib_baseline = 0.23
                     is_calibrated = True
-                    print(f"\n[CALIBRATION COMPLETE] min_ear: {min_ear:.4f}, max_ear: {max_ear:.4f}")
+                    print(f"\n[CALIBRATION COMPLETE] calib_baseline (init max): {calib_baseline:.4f}")
             else:
-                # Slowly adapt calibration to lighting changes
-                min_ear = min_ear * 0.999 + min(ear_avg, min_ear) * 0.001
-                max_ear = max_ear * 0.999 + max(ear_avg, max_ear) * 0.001
+                # Update baseline as expanding max
+                if ear_avg > calib_baseline:
+                    calib_baseline = ear_avg
                 
-                # Normalize current EAR
-                ear_norm = (ear_avg - min_ear) / (max_ear - min_ear)
+                # Normalize current EAR using expanding max
+                ear_norm = ear_avg / calib_baseline
                 ear_norm = np.clip(ear_norm, 0.0, 1.0)
                 
                 # --- TIME-BASED DOWNSAMPLING ---
@@ -303,6 +317,8 @@ def main():
                         else:
                             if num_features == 28:
                                 feat = extract_advanced_features_single(w_arr)
+                            elif num_features == 12:
+                                feat = extract_advanced_12_features_single(w_arr)
                             else:
                                 feat = w_arr
                             pred = model.predict([feat])[0]

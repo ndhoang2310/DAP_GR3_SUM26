@@ -12,14 +12,26 @@ if sys.stderr.encoding != 'utf-8':
 
 def dynamic_normalize(x):
     """
-    Chuẩn hóa tỷ lệ theo giá trị Max tích lũy (Causal Max Normalization / Min=0).
-    Khắc phục lỗi 'Khởi động lạnh' (Cold-start) do expanding min bám đuổi nhiễu mắt mở.
+    Chuẩn hóa tỷ lệ lai (Hybrid Calibration):
+    1. Khởi tạo mốc max bằng Max của 15 frame đầu tiên.
+    2. Áp dụng Hard Lower Bound chống lỗi nhắm mắt khi bật camera.
+    3. Từ frame 16 trở đi, tự động cập nhật baseline tăng lên nếu thấy EAR lớn hơn (expanding max).
     """
-    exp_max = x.expanding(min_periods=1).max()
+    x_vals = x.values
+    init_max = np.max(x_vals[:15]) if len(x_vals) >= 15 else np.max(x_vals)
     
-    # Nếu exp_max = 0, trả về 0.5 để tránh lỗi chia cho 0
-    norm = np.where(exp_max == 0, 0.5, x / exp_max)
-    return pd.Series(norm, index=x.index)
+    # Áp dụng Hard Lower Bound chống khởi động lạnh lúc nhắm mắt
+    if np.isnan(init_max) or init_max < 0.18:
+        init_max = 0.23  # Ngưỡng mở mắt tối thiểu mặc định
+        
+    norm = np.zeros_like(x_vals)
+    current_max = init_max
+    for idx, val in enumerate(x_vals):
+        if val > current_max:
+            current_max = val
+        norm[idx] = val / current_max
+        
+    return pd.Series(np.clip(norm, 0.0, 1.0), index=x.index)
 
 def process_sequences(input_csv, output_dir, window_size=7):
     print(f"1. Đang tải dữ liệu từ {input_csv}...")
@@ -30,13 +42,8 @@ def process_sequences(input_csv, output_dir, window_size=7):
         
     df = df.drop_duplicates(subset=['video_id', 'frame_index']).copy()
     
-    # Chuẩn hóa Min-Max EAR theo chiều thời gian thực (Causal Normalization)
-    print("2. Đang chuẩn hóa Min-Max EAR (Causal/Dynamic) theo từng video...")
-    # Cần sort theo time trước khi expanding
-    df = df.sort_values(['video_id', 'frame_index'])
-    df['ear_norm'] = df.groupby('video_id')['ear_avg'].transform(dynamic_normalize)
-    
-    print("3. Đang nội suy phục hồi các frame bị khuyết...")
+    # 2. Nội suy phục hồi các frame bị khuyết trước khi chuẩn hóa
+    print("2. Đang nội suy phục hồi các frame bị khuyết...")
     df_interp_list = []
     for video_id, group in df.groupby('video_id'):
         group = group.sort_values('frame_index').set_index('frame_index')
@@ -44,7 +51,6 @@ def process_sequences(input_csv, output_dir, window_size=7):
         group = group.reindex(full_idx)
         
         group['ear_avg'] = group['ear_avg'].interpolate(method='linear')
-        group['ear_norm'] = group['ear_norm'].interpolate(method='linear')
         group['final_label'] = group['final_label'].ffill().bfill()
         group['video_id'] = video_id
         
@@ -53,18 +59,24 @@ def process_sequences(input_csv, output_dir, window_size=7):
     df_interp = pd.concat(df_interp_list, ignore_index=True)
     df_interp = df_interp.dropna(subset=['ear_avg'])
     
-    # Tách tập Train/Test theo Video ID trước khi trích xuất cửa sổ
-    # ĐỂ TRÁNH DATA LEAKAGE (Trùng lặp cửa sổ giữa Train và Test)
-    print("\n4. Đang chia tập Train/Test theo Video (Chống Data Leakage)...")
+    # 3. Chuẩn hóa EAR sử dụng thuật toán Hybrid (Median 15 frame đầu + Expanding Max sau đó)
+    print("3. Đang chuẩn hóa EAR (Hybrid first_15_median + expanding_max)...")
+    df_interp = df_interp.sort_values(['video_id', 'frame_index'])
+    df_interp['ear_norm'] = df_interp.groupby('video_id')['ear_avg'].transform(dynamic_normalize)
+    
+    # 4. Tách tập Train/Val/Test theo Video ID (Chống Data Leakage)
+    print("\n4. Đang chia tập Train/Val/Test theo Video (Chống Data Leakage)...")
     unique_videos = df_interp['video_id'].unique()
     train_vids, test_vids = train_test_split(unique_videos, test_size=0.2, random_state=42)
+    train_vids_sub, val_vids = train_test_split(train_vids, test_size=0.15, random_state=42)
     
-    print(f" - Tổng số Video: {len(unique_videos)}")
-    print(f" - Tập Train    : {len(train_vids)} videos")
-    print(f" - Tập Test     : {len(test_vids)} videos")
+    print(f" - Tổng số Video    : {len(unique_videos)}")
+    print(f" - Tập Train (sub)  : {len(train_vids_sub)} videos")
+    print(f" - Tập Val (cho DL) : {len(val_vids)} videos")
+    print(f" - Tập Test (độc lập): {len(test_vids)} videos")
     
-    # Chia DataFrame thành 2 phần rõ rệt
-    df_train = df_interp[df_interp['video_id'].isin(train_vids)]
+    df_train = df_interp[df_interp['video_id'].isin(train_vids_sub)]
+    df_val = df_interp[df_interp['video_id'].isin(val_vids)]
     df_test = df_interp[df_interp['video_id'].isin(test_vids)]
     
     def extract_windows(df_subset):
@@ -74,10 +86,12 @@ def process_sequences(input_csv, output_dir, window_size=7):
             ear_norm_values = group['ear_norm'].values
             label_values = group['final_label'].values
             
-            if len(ear_norm_values) < window_size:
+            # --- FIX: LOẠI BỎ 15 FRAME ĐẦU HIỆU CHUẨN KHỎI TẬP TRAIN/TEST ---
+            # Chỉ bắt đầu trích xuất cửa sổ trượt từ frame thứ 16 trở đi (index 15)
+            if len(ear_norm_values) < 15 + window_size:
                 continue
                 
-            for i in range(len(ear_norm_values) - window_size + 1):
+            for i in range(15, len(ear_norm_values) - window_size + 1):
                 window_feat = ear_norm_values[i:i+window_size]
                 window_labels = label_values[i:i+window_size]
                 
@@ -98,8 +112,9 @@ def process_sequences(input_csv, output_dir, window_size=7):
             return np.array([]), np.array([])
         return np.array(X_sub)[..., np.newaxis], np.array(y_sub)
 
-    print("\n5. Đang trích xuất cửa sổ trượt (N=7)...")
+    print("\n5. Đang trích xuất cửa sổ trượt (N=7) bắt đầu từ frame 16...")
     X_train, y_train = extract_windows(df_train)
+    X_val, y_val = extract_windows(df_val)
     X_test, y_test = extract_windows(df_test)
     
     print("\n[BÁO CÁO TỔNG QUAN TẬP TRAIN]")
@@ -107,6 +122,12 @@ def process_sequences(input_csv, output_dir, window_size=7):
     print(f" - Nhãn 0 (No-Blink)    : {np.sum(y_train==0)}")
     print(f" - Nhãn 1 (Blink)       : {np.sum(y_train==1)}")
     print(f" - Nhãn 2 (Long-Closure): {np.sum(y_train==2)}")
+    
+    print("\n[BÁO CÁO TỔNG QUAN TẬP VALIDATION]")
+    print(f" - Số lượng cửa sổ (Windows): {len(X_val)}")
+    print(f" - Nhãn 0 (No-Blink)    : {np.sum(y_val==0)}")
+    print(f" - Nhãn 1 (Blink)       : {np.sum(y_val==1)}")
+    print(f" - Nhãn 2 (Long-Closure): {np.sum(y_val==2)}")
     
     print("\n[BÁO CÁO TỔNG QUAN TẬP TEST]")
     print(f" - Số lượng cửa sổ (Windows): {len(X_test)}")
@@ -118,6 +139,8 @@ def process_sequences(input_csv, output_dir, window_size=7):
     os.makedirs(output_dir, exist_ok=True)
     np.save(os.path.join(output_dir, 'X_train_seq.npy'), X_train)
     np.save(os.path.join(output_dir, 'y_train_seq.npy'), y_train)
+    np.save(os.path.join(output_dir, 'X_val_seq.npy'), X_val)
+    np.save(os.path.join(output_dir, 'y_val_seq.npy'), y_val)
     np.save(os.path.join(output_dir, 'X_test_seq.npy'), X_test)
     np.save(os.path.join(output_dir, 'y_test_seq.npy'), y_test)
     print(f"Hoàn thành! Các file npy đã được lưu tại: {output_dir}")

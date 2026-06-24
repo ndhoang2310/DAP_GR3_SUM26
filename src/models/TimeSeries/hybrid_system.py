@@ -43,6 +43,13 @@ def run_hybrid_system(best_model=None, feature_type='advanced_12feature'):
     
     # 1. Khởi tạo model chạy chính
     if best_model is None:
+        X_train_sub = np.load(os.path.join(data_dir, 'X_train_seq.npy'))
+        y_train_sub = np.load(os.path.join(data_dir, 'y_train_seq.npy'))
+        X_val = np.load(os.path.join(data_dir, 'X_val_seq.npy'))
+        y_val = np.load(os.path.join(data_dir, 'y_val_seq.npy'))
+        X_train = np.concatenate([X_train_sub, X_val], axis=0)
+        y_train = np.concatenate([y_train_sub, y_val], axis=0)
+        
         X_train_flat = X_train.squeeze(-1)
         X_train_adv = np.array([extract_advanced_features_single(w) for w in X_train_flat])
         print("\n--- Training Random Forest model for Hybrid system (Fallback) ---")

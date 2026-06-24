@@ -43,11 +43,14 @@ def run_lstm_training():
     data_dir = os.path.join('dataset_master', 'processed_seq')
     X_train = np.load(os.path.join(data_dir, 'X_train_seq.npy'))
     y_train = np.load(os.path.join(data_dir, 'y_train_seq.npy'))
+    X_val = np.load(os.path.join(data_dir, 'X_val_seq.npy'))
+    y_val = np.load(os.path.join(data_dir, 'y_val_seq.npy'))
     X_test = np.load(os.path.join(data_dir, 'X_test_seq.npy'))
     y_test = np.load(os.path.join(data_dir, 'y_test_seq.npy'))
     
     # Extract 3D sequence features (samples, 7, 3)
     X_train_3d = extract_3d_sequence_features(X_train)
+    X_val_3d = extract_3d_sequence_features(X_val)
     X_test_3d = extract_3d_sequence_features(X_test)
     
     # Define LSTM model
@@ -70,12 +73,12 @@ def run_lstm_training():
         restore_best_weights=True
     )
     
-    print("[INFO] Training LSTM model...")
+    print("[INFO] Training LSTM model (Using Video-based Validation set to prevent leakage)...")
     model.fit(
         X_train_3d, y_train,
         epochs=40,
         batch_size=32,
-        validation_split=0.15,
+        validation_data=(X_val_3d, y_val),
         callbacks=[early_stop],
         verbose=0 # Disable detailed logs to keep console clean
     )
