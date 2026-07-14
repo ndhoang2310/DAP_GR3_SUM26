@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drowsiness Detection MVP</title>
+    <title>BlinkGuard MVP</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
         :root {
             color-scheme: dark;
@@ -236,11 +237,12 @@
     <main>
         <header>
             <div>
-                <h1>Drowsiness Detection MVP</h1>
-                <p class="subtitle">MediaPipe FaceLandmarker + EAR window + Linear SVM, chạy hoàn toàn trên trình duyệt.</p>
+                <h1>BlinkGuard MVP</h1>
+                <p class="subtitle">Theo dõi blink/min, streak không chớp mắt và cảnh báo buồn ngủ, chạy hoàn toàn trên trình duyệt.</p>
             </div>
             <div class="controls">
                 <button class="primary" id="start-btn" type="button">Start Camera</button>
+                <button id="notify-btn" type="button">Enable Notifications</button>
                 <button id="reset-btn" type="button" disabled>Reset</button>
                 <button id="stop-btn" type="button" disabled>Stop</button>
             </div>
@@ -250,7 +252,7 @@
             <div class="stage">
                 <video id="camera" autoplay playsinline muted></video>
                 <canvas id="overlay"></canvas>
-                <div class="alert" id="alert" hidden>DROWSINESS WARNING</div>
+                <div class="alert" id="alert" hidden>WARNING</div>
             </div>
 
             <aside class="hud">
@@ -262,6 +264,26 @@
                 </div>
 
                 <div class="metric-grid">
+                    <div class="metric">
+                        <span>Blinks / 60s</span>
+                        <strong id="blink-rate">0/min</strong>
+                    </div>
+                    <div class="metric">
+                        <span>Target</span>
+                        <strong id="blink-target">12/min</strong>
+                    </div>
+                    <div class="metric">
+                        <span>3-min Trend</span>
+                        <strong id="blink-trend">0.0/min</strong>
+                    </div>
+                    <div class="metric">
+                        <span>No-blink Streak</span>
+                        <strong id="no-blink-streak">0.0s</strong>
+                    </div>
+                    <div class="metric">
+                        <span>Session Time</span>
+                        <strong id="session-time">00:00</strong>
+                    </div>
                     <div class="metric">
                         <span>Raw EAR</span>
                         <strong id="raw-ear">N/A</strong>
@@ -290,9 +312,17 @@
                         <span>Blink Count</span>
                         <strong id="blink-count">0</strong>
                     </div>
+                    <div class="metric">
+                        <span>Drowsy Events</span>
+                        <strong id="drowsy-events">0</strong>
+                    </div>
+                    <div class="metric">
+                        <span>Notifications</span>
+                        <strong id="notification-status">Off</strong>
+                    </div>
                 </div>
 
-                <p class="message" id="message">Press Start Camera. Webcam requires localhost or HTTPS.</p>
+                <p class="message" id="message">Press Start Camera. Enable notifications if you want BlinkGuard to alert you outside the web page.</p>
             </aside>
         </section>
     </main>

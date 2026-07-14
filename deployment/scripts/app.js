@@ -12,6 +12,12 @@ const SAMPLE_INTERVAL_MS = 1000 / 15;
 const HYBRID_THRESHOLD = 0.5;
 const DROWSY_HISTORY_SIZE = 15;
 const DROWSY_VOTES_REQUIRED = 10;
+const TARGET_BLINKS_PER_MIN = 12;
+const VERY_LOW_BLINKS_PER_MIN = 7;
+const LONG_NO_BLINK_MS = 15000;
+const BLINK_RATE_WINDOW_MS = 60000;
+const TREND_WINDOW_MS = 180000;
+const NOTIFICATION_COOLDOWN_MS = 60000;
 
 const LEFT_EYE_EAR_IDX = [33, 160, 158, 133, 153, 144];
 const RIGHT_EYE_EAR_IDX = [362, 385, 387, 263, 373, 380];
@@ -28,10 +34,25 @@ const state = {
     calibrated: false,
     slidingWindow: [],
     predHistory: [],
+    blinkEvents: [],
     totalWindows: 0,
     skippedMl: 0,
     blinkCount: 0,
     blinkCooldown: 0,
+    sessionStartTime: null,
+    lastBlinkTime: null,
+    longestNoBlinkMs: 0,
+    drowsyEvents: 0,
+    wasDrowsy: false,
+    notificationsEnabled: false,
+    lastNotificationAt: {},
+    health: {
+        blinkRate: 0,
+        blinkTrend: 0,
+        noBlinkSeconds: 0,
+        sessionSeconds: 0,
+        warning: ""
+    },
     latest: {
         rawEar: null,
         normEar: null,
@@ -49,6 +70,8 @@ const els = {
     startBtn: document.getElementById("start-btn"),
     stopBtn: document.getElementById("stop-btn"),
     resetBtn: document.getElementById("reset-btn"),
+    notifyBtn: document.getElementById("notify-btn"),
+    notificationStatus: document.getElementById("notification-status"),
     status: document.getElementById("status"),
     rawEar: document.getElementById("raw-ear"),
     normEar: document.getElementById("norm-ear"),
@@ -57,6 +80,12 @@ const els = {
     cpuSaved: document.getElementById("cpu-saved"),
     cpuMode: document.getElementById("cpu-mode"),
     blinkCount: document.getElementById("blink-count"),
+    blinkRate: document.getElementById("blink-rate"),
+    blinkTarget: document.getElementById("blink-target"),
+    blinkTrend: document.getElementById("blink-trend"),
+    noBlinkStreak: document.getElementById("no-blink-streak"),
+    sessionTime: document.getElementById("session-time"),
+    drowsyEvents: document.getElementById("drowsy-events"),
     alert: document.getElementById("alert"),
     message: document.getElementById("message")
 };
@@ -93,16 +122,30 @@ function extractAdvancedFeatures(w) {
 }
 
 function resetPipeline() {
+    const now = performance.now();
     state.lastSampleTime = 0;
     state.calibrationEars = [];
     state.currentMax = 0.23;
     state.calibrated = false;
     state.slidingWindow = [];
     state.predHistory = [];
+    state.blinkEvents = [];
     state.totalWindows = 0;
     state.skippedMl = 0;
     state.blinkCount = 0;
     state.blinkCooldown = 0;
+    state.sessionStartTime = now;
+    state.lastBlinkTime = null;
+    state.longestNoBlinkMs = 0;
+    state.drowsyEvents = 0;
+    state.wasDrowsy = false;
+    state.health = {
+        blinkRate: 0,
+        blinkTrend: 0,
+        noBlinkSeconds: 0,
+        sessionSeconds: 0,
+        warning: ""
+    };
     state.latest = {
         rawEar: null,
         normEar: null,
@@ -122,7 +165,52 @@ function pushLimited(buffer, value, maxLen) {
     }
 }
 
-function processRawEar(rawEar) {
+function recordBlink(timestamp) {
+    state.blinkCount += 1;
+    state.lastBlinkTime = timestamp;
+    state.blinkEvents.push(timestamp);
+    state.blinkEvents = state.blinkEvents.filter((eventTime) => timestamp - eventTime <= TREND_WINDOW_MS);
+}
+
+function updateEyeHealth(timestamp) {
+    const sessionStart = state.sessionStartTime ?? timestamp;
+    const sessionMs = Math.max(0, timestamp - sessionStart);
+    const sessionSeconds = sessionMs / 1000;
+    const recentBlinks = state.blinkEvents.filter((eventTime) => timestamp - eventTime <= BLINK_RATE_WINDOW_MS);
+    const trendBlinks = state.blinkEvents.filter((eventTime) => timestamp - eventTime <= TREND_WINDOW_MS);
+    const trendMinutes = Math.max(1 / 60, Math.min(3, sessionSeconds / 60));
+    const blinkTrend = trendBlinks.length / trendMinutes;
+
+    let noBlinkMs = 0;
+    if (state.calibrated) {
+        const referenceTime = state.lastBlinkTime ?? sessionStart;
+        noBlinkMs = Math.max(0, timestamp - referenceTime);
+        state.longestNoBlinkMs = Math.max(state.longestNoBlinkMs, noBlinkMs);
+    }
+
+    let warning = "";
+    if (state.latest.drowsy) {
+        warning = "Drowsiness warning";
+    } else if (noBlinkMs >= LONG_NO_BLINK_MS) {
+        warning = "Long no-blink streak";
+    } else if (sessionSeconds >= 60 && recentBlinks.length < VERY_LOW_BLINKS_PER_MIN) {
+        warning = "Very low blink rate";
+    } else if (sessionSeconds >= 60 && recentBlinks.length < TARGET_BLINKS_PER_MIN) {
+        warning = "Low blink rate";
+    }
+
+    state.health = {
+        blinkRate: recentBlinks.length,
+        blinkTrend,
+        noBlinkSeconds: noBlinkMs / 1000,
+        sessionSeconds,
+        warning
+    };
+
+    maybeSendWarningNotification(warning, timestamp);
+}
+
+function processRawEar(rawEar, timestamp) {
     state.latest.rawEar = rawEar;
 
     if (!state.calibrated) {
@@ -136,7 +224,10 @@ function processRawEar(rawEar) {
             state.currentMax = Number.isNaN(initMax) || initMax < 0.18 ? 0.23 : initMax;
             state.calibrated = true;
             state.latest.status = "Collecting window";
+            state.sessionStartTime = timestamp;
+            state.lastBlinkTime = timestamp;
         }
+        updateEyeHealth(timestamp);
         return;
     }
 
@@ -151,6 +242,7 @@ function processRawEar(rawEar) {
     if (state.slidingWindow.length < WINDOW_SIZE) {
         state.latest.status = "Collecting window";
         state.latest.prediction = -1;
+        updateEyeHealth(timestamp);
         return;
     }
 
@@ -172,6 +264,10 @@ function processRawEar(rawEar) {
 
     const drowsyVotes = state.predHistory.filter((value) => value === 2).length;
     state.latest.drowsy = drowsyVotes >= DROWSY_VOTES_REQUIRED;
+    if (state.latest.drowsy && !state.wasDrowsy) {
+        state.drowsyEvents += 1;
+    }
+    state.wasDrowsy = state.latest.drowsy;
 
     if (state.latest.drowsy) {
         state.latest.status = "Drowsy";
@@ -185,9 +281,10 @@ function processRawEar(rawEar) {
         state.blinkCooldown -= 1;
     }
     if (prediction === 1 && state.blinkCooldown === 0) {
-        state.blinkCount += 1;
+        recordBlink(timestamp);
         state.blinkCooldown = 3;
     }
+    updateEyeHealth(timestamp);
 }
 
 function drawLandmarks(landmarks) {
@@ -222,13 +319,106 @@ function predictionLabel(value) {
     return "Waiting";
 }
 
+function notificationPermission() {
+    if (!("Notification" in window)) {
+        return "unsupported";
+    }
+    return Notification.permission;
+}
+
+function updateNotificationUi() {
+    const permission = notificationPermission();
+
+    if (permission === "unsupported") {
+        els.notifyBtn.disabled = true;
+        els.notificationStatus.textContent = "Unsupported";
+        return;
+    }
+
+    state.notificationsEnabled = permission === "granted";
+    els.notifyBtn.disabled = permission === "denied";
+    els.notifyBtn.textContent = permission === "granted" ? "Notifications On" : "Enable Notifications";
+    els.notificationStatus.textContent = permission === "granted"
+        ? "On"
+        : permission === "denied"
+            ? "Blocked"
+            : "Off";
+}
+
+async function requestNotifications() {
+    if (!("Notification" in window)) {
+        els.message.textContent = "This browser does not support system notifications.";
+        updateNotificationUi();
+        return;
+    }
+
+    const permission = await Notification.requestPermission();
+    state.notificationsEnabled = permission === "granted";
+    els.message.textContent = permission === "granted"
+        ? "System notifications are enabled."
+        : "Notifications were not enabled. Web alerts will still appear.";
+    updateNotificationUi();
+}
+
+function maybeSendWarningNotification(warning, timestamp) {
+    if (!warning || !state.notificationsEnabled || notificationPermission() !== "granted") {
+        return;
+    }
+
+    const notificationKey = warning;
+    const lastSentAt = state.lastNotificationAt[notificationKey] ?? -Infinity;
+    if (timestamp - lastSentAt < NOTIFICATION_COOLDOWN_MS) {
+        return;
+    }
+
+    state.lastNotificationAt[notificationKey] = timestamp;
+
+    const { title, body } = notificationContent(warning);
+    const notification = new Notification(title, {
+        body,
+        tag: notificationKey,
+        renotify: false,
+        silent: false
+    });
+
+    if ("vibrate" in navigator) {
+        navigator.vibrate([160, 80, 160]);
+    }
+
+    window.setTimeout(() => notification.close(), 8000);
+}
+
+function notificationContent(warning) {
+    if (warning === "Long no-blink streak") {
+        return {
+            title: "BlinkGuard: chớp mắt một chút nhé",
+            body: `Bạn đã không chớp mắt ${state.health.noBlinkSeconds.toFixed(0)} giây. Chớp mắt vài lần và nhìn xa khỏi màn hình.`
+        };
+    }
+
+    if (warning === "Very low blink rate" || warning === "Low blink rate") {
+        return {
+            title: "BlinkGuard: blink rate đang thấp",
+            body: `60 giây vừa rồi có ${state.health.blinkRate} lần chớp mắt. Mục tiêu hiện tại là ${TARGET_BLINKS_PER_MIN}/phút.`
+        };
+    }
+
+    return {
+        title: "BlinkGuard: cảnh báo buồn ngủ",
+        body: "Bạn có dấu hiệu nhắm mắt lâu. Hãy nghỉ ngắn hoặc kiểm tra lại trạng thái tỉnh táo."
+    };
+}
+
 function renderHud() {
     const latest = state.latest;
     const cpuSaved = state.totalWindows === 0 ? 0 : (state.skippedMl / state.totalWindows) * 100;
     const calibrationProgress = Math.min(state.calibrationEars.length, CALIBRATION_FRAMES);
+    const health = state.health;
+    const warning = health.warning;
+    const statusText = warning || latest.status;
 
-    els.status.textContent = latest.status;
-    els.status.dataset.state = latest.drowsy ? "danger" : latest.status.toLowerCase();
+    els.status.textContent = statusText;
+    els.status.dataset.state = warning ? "danger" : latest.status.toLowerCase();
     els.rawEar.textContent = latest.rawEar == null ? "N/A" : latest.rawEar.toFixed(3);
     els.normEar.textContent = latest.normEar == null ? "N/A" : latest.normEar.toFixed(3);
     els.prediction.textContent = predictionLabel(latest.prediction);
@@ -236,7 +426,21 @@ function renderHud() {
     els.cpuSaved.textContent = `${cpuSaved.toFixed(1)}%`;
     els.cpuMode.textContent = latest.cpuMode;
     els.blinkCount.textContent = String(state.blinkCount);
-    els.alert.hidden = !latest.drowsy;
+    els.blinkRate.textContent = `${health.blinkRate}/min`;
+    els.blinkTarget.textContent = `${TARGET_BLINKS_PER_MIN}/min`;
+    els.blinkTrend.textContent = `${health.blinkTrend.toFixed(1)}/min`;
+    els.noBlinkStreak.textContent = `${health.noBlinkSeconds.toFixed(1)}s`;
+    els.sessionTime.textContent = formatDuration(health.sessionSeconds);
+    els.drowsyEvents.textContent = String(state.drowsyEvents);
+    els.alert.hidden = !warning;
+    els.alert.textContent = warning.toUpperCase();
+    updateNotificationUi();
+}
+
+function formatDuration(totalSeconds) {
+    const seconds = Math.floor(totalSeconds % 60).toString().padStart(2, "0");
+    const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+    return `${minutes}:${seconds}`;
 }
 
 async function initFaceLandmarker() {
@@ -338,7 +542,7 @@ function loop() {
                 const leftEar = computeEar(landmarks, LEFT_EYE_EAR_IDX);
                 const rightEar = computeEar(landmarks, RIGHT_EYE_EAR_IDX);
                 const rawEar = Math.min(leftEar, rightEar);
-                processRawEar(rawEar);
+                processRawEar(rawEar, now);
                 state.lastSampleTime = now;
             }
         } else {
@@ -346,8 +550,10 @@ function loop() {
             state.latest.status = "No face";
             state.latest.prediction = -1;
             state.latest.drowsy = false;
+            state.wasDrowsy = false;
             state.slidingWindow = [];
             state.predHistory = [];
+            updateEyeHealth(now);
             clearCanvas();
         }
         renderHud();
@@ -373,6 +579,7 @@ els.startBtn.addEventListener("click", async () => {
 });
 
 els.stopBtn.addEventListener("click", stopCamera);
+els.notifyBtn.addEventListener("click", requestNotifications);
 
 els.resetBtn.addEventListener("click", () => {
     resetPipeline();
@@ -381,4 +588,5 @@ els.resetBtn.addEventListener("click", () => {
 
 window.addEventListener("beforeunload", stopCamera);
 
+updateNotificationUi();
 renderHud();

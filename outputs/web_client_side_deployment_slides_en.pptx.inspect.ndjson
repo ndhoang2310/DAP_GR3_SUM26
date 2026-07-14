@@ -1,0 +1,406 @@
+{"kind":"deck","id":"pr/f2h0ly","name":"Deck"}
+{"kind":"layout","layoutId":"5010f5f4-68d3-45f4-82c2-7f5490775c00","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"2e18990d-1ec4-498d-a63f-4b60bb9da4c7","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/ltu26x","slide":1,"title":"Slide 1: Deployment Goal","textShapes":12}
+{"kind":"textbox","id":"sh/tcfyd8ru","slide":1,"name":"slide-1-section","text":"Slide 1: Deployment Goal","textPreview":"Slide 1: Deployment Goal","textChars":24,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/694fit8j","slide":1,"name":"slide-1-title","text":"From Python Prototype to Browser-Based BlinkGuard","textPreview":"From Python Prototype to Browser-Based BlinkGuard","textChars":49,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/7adgby94","slide":1,"name":"slide-1-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/knmxgjqd","slide":1,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/l8vy9ory","slide":1,"name":"bullet-text-86-200","text":"Deploy the eye-state detection pipeline as a real-time web application.","textPreview":"Deploy the eye-state detection pipeline as a real-time web application.","textChars":71,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/yl4fe987","slide":1,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/jmdg7e9s","slide":1,"name":"bullet-text-86-236","text":"Run all inference directly in the user's browser.","textPreview":"Run all inference directly in the user's browser.","textChars":49,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/4jqhcnqx","slide":1,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/54zylsr2","slide":1,"name":"bullet-text-86-272","text":"Track blink behavior and drowsiness using webcam input.","textPreview":"Track blink behavior and drowsiness using webcam input.","textChars":55,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"textbox","id":"sh/lcritk76","slide":1,"name":"bullet-86-308","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,308,20,36]}
+{"kind":"textbox","id":"sh/0bi10f6l","slide":1,"name":"bullet-text-86-308","text":"Provide alerts when users forget to blink during long focus sessions.","textPreview":"Provide alerts when users forget to blink during long focus sessions.","textChars":69,"textLines":1,"bbox":[114,308,1060,40]}
+{"kind":"textbox","id":"sh/zq90rap0","slide":1,"name":"bullet-86-344","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,344,20,36]}
+{"kind":"textbox","id":"sh/yp0jy5of","slide":1,"name":"bullet-text-86-344","text":"Keep the system privacy-friendly by avoiding server-side video processing.","textPreview":"Keep the system privacy-friendly by avoiding server-side video processing.","textChars":74,"textLines":1,"bbox":[114,344,1060,40]}
+{"kind":"notes","id":"nt/ltu26x","slide":1,"text":"This deployment stage turns the research pipeline into a usable client-side product called BlinkGuard."}
+{"kind":"slide","id":"sl/rkvi12","slide":2,"title":"Slide 2: Why Client-Side Deployment?","textShapes":14}
+{"kind":"textbox","id":"sh/dwry9wju","slide":2,"name":"slide-2-section","text":"Slide 2: Why Client-Side Deployment?","textPreview":"Slide 2: Why Client-Side Deployment?","textChars":36,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/qt0fehkj","slide":2,"name":"slide-2-title","text":"Why Run Everything in the Browser?","textPreview":"Why Run Everything in the Browser?","textChars":34,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/ru9g7m14","slide":2,"name":"slide-2-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/0z2xkr2l","slide":2,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/10bydwj6","slide":2,"name":"bullet-text-86-200","text":"The final TimeSeries EAR model is a lightweight Linear SVM.","textPreview":"The final TimeSeries EAR model is a lightweight Linear SVM.","textChars":59,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/ex0fihkf","slide":2,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/fy9gbm10","slide":2,"name":"bullet-text-86-236","text":"Inference is fast enough to run directly on laptops and phones.","textPreview":"Inference is fast enough to run directly on laptops and phones.","textChars":63,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/o32hob2h","slide":2,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/p4byhgj2","slide":2,"name":"bullet-text-86-272","text":"No backend server is required for camera processing or model inference.","textPreview":"No backend server is required for camera processing or model inference.","textChars":71,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"textbox","id":"sh/9ozi5cna","slide":2,"name":"bullet-86-308","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,308,20,36]}
+{"kind":"textbox","id":"sh/8nqhwrmp","slide":2,"name":"bullet-text-86-308","text":"Webcam frames stay on the user's device.","textPreview":"Webcam frames stay on the user's device.","textChars":40,"textLines":1,"bbox":[114,308,1060,40]}
+{"kind":"textbox","id":"sh/nmh03m5k","slide":2,"name":"bullet-86-344","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,344,20,36]}
+{"kind":"textbox","id":"sh/mlozuh4z","slide":2,"name":"bullet-text-86-344","text":"The app can be hosted as a static website with very low deployment cost.","textPreview":"The app can be hosted as a static website with very low deployment cost.","textChars":72,"textLines":1,"bbox":[114,344,1060,40]}
+{"kind":"textbox","id":"sh/xczi9wnm","slide":2,"name":"label-Key Message-392","text":"Key Message:","textPreview":"Key Message:","textChars":12,"textLines":1,"bbox":[86,392,1088,28]}
+{"kind":"textbox","id":"sh/wbq10rm1","slide":2,"name":"text-426","text":"Client-side deployment gives us low latency, better privacy, and almost zero server cost.","textPreview":"Client-side deployment gives us low latency, better privacy, and almost zero server cost.","textChars":89,"textLines":1,"bbox":[86,426,1088,56]}
+{"kind":"notes","id":"nt/rkvi12","slide":2,"text":""}
+{"kind":"slide","id":"sl/049mh4","slide":3,"title":"Slide 3: Deployed Model","textShapes":16}
+{"kind":"textbox","id":"sh/0jud0jmh","slide":3,"name":"slide-3-section","text":"Slide 3: Deployed Model","textPreview":"Slide 3: Deployed Model","textChars":23,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/zilc7e5w","slide":3,"name":"slide-3-title","text":"Model Used for Web Deployment","textPreview":"Model Used for Web Deployment","textChars":29,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/ehcvy94r","slide":3,"name":"slide-3-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/dg3u54n6","slide":3,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/cfudwzml","slide":3,"name":"bullet-text-86-200","text":"Source model: best_traditional_model.pkl","textPreview":"Source model: best_traditional_model.pkl","textChars":40,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/relc3e50","slide":3,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/qdsvu94f","slide":3,"name":"bullet-text-86-236","text":"Model type: StandardScaler + Linear SVC","textPreview":"Model type: StandardScaler + Linear SVC","textChars":39,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/pcju14nu","slide":3,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/4radszm9","slide":3,"name":"bullet-text-86-272","text":"Input: 12 dynamic EAR-based features","textPreview":"Input: 12 dynamic EAR-based features","textChars":36,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"textbox","id":"sh/epgvut07","slide":3,"name":"bullet-86-308","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,308,20,36]}
+{"kind":"textbox","id":"sh/zqpw3yhs","slide":3,"name":"bullet-text-86-308","text":"Output classes:","textPreview":"Output classes:","textChars":15,"textLines":1,"bbox":[114,308,1060,40]}
+{"kind":"textbox","id":"sh/0rydw3id","slide":3,"name":"bullet-86-344","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,344,20,36]}
+{"kind":"textbox","id":"sh/1s7e58zy","slide":3,"name":"bullet-text-86-344","text":"0: Eye open / no blink","textPreview":"0: Eye open / no blink","textChars":22,"textLines":1,"bbox":[144,344,1030,40]}
+{"kind":"textbox","id":"sh/q1wvqt0b","slide":3,"name":"bullet-86-380","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,380,20,36]}
+{"kind":"textbox","id":"sh/r25czyhg","slide":3,"name":"bullet-text-86-380","text":"1: Blink","textPreview":"1: Blink","textChars":8,"textLines":1,"bbox":[144,380,1030,40]}
+{"kind":"textbox","id":"sh/cneds3i1","slide":3,"name":"bullet-86-416","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,416,20,36]}
+{"kind":"textbox","id":"sh/do7e1ozm","slide":3,"name":"bullet-text-86-416","text":"2: Sleep / long closure","textPreview":"2: Sleep / long closure","textChars":23,"textLines":1,"bbox":[144,416,1030,40]}
+{"kind":"notes","id":"nt/049mh4","slide":3,"text":"This model was selected because it achieved strong benchmark performance while remaining small and easy to port to JavaScript."}
+{"kind":"slide","id":"sl/58ny3s","slide":4,"title":"Slide 4: 12-Feature Input Vector","textShapes":18}
+{"kind":"textbox","id":"sh/836907mp","slide":4,"name":"slide-4-section","text":"Slide 4: 12-Feature Input Vector","textPreview":"Slide 4: 12-Feature Input Vector","textChars":32,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/72xs7254","slide":4,"name":"slide-4-title","text":"Input Features for SVM Inference","textPreview":"Input Features for SVM Inference","textChars":32,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/m1oryh4j","slide":4,"name":"slide-4-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/h8zadwnm","slide":4,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/w7qt4rm1","slide":4,"name":"bullet-text-86-200","text":"7 normalized EAR values from a sliding window","textPreview":"7 normalized EAR values from a sliding window","textChars":45,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/v6hsbm5g","slide":4,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/u58b2h4v","slide":4,"name":"bullet-text-86-236","text":"Minimum EAR in the window","textPreview":"Minimum EAR in the window","textChars":25,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/xcva1sn2","slide":4,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/cbm9snmh","slide":4,"name":"bullet-text-86-272","text":"Maximum EAR in the window","textPreview":"Maximum EAR in the window","textChars":25,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"textbox","id":"sh/ih47m1kz","slide":4,"name":"bullet-86-308","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,308,20,36]}
+{"kind":"textbox","id":"sh/3ix8f61k","slide":4,"name":"bullet-text-86-308","text":"Standard deviation","textPreview":"Standard deviation","textChars":18,"textLines":1,"bbox":[114,308,1060,40]}
+{"kind":"textbox","id":"sh/4j6pob25","slide":4,"name":"bullet-86-344","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,344,20,36]}
+{"kind":"textbox","id":"sh/5kfqhgjq","slide":4,"name":"bullet-text-86-344","text":"Center ratio:","textPreview":"Center ratio:","textChars":13,"textLines":1,"bbox":[114,344,1060,40]}
+{"kind":"textbox","id":"sh/qlo7q1kb","slide":4,"name":"bullet-86-380","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,380,20,36]}
+{"kind":"textbox","id":"sh/rmx8j61g","slide":4,"name":"bullet-text-86-380","text":"(w[0] + w[6]) / (2 * w[3] + 1e-5)","textPreview":"(w[0] + w[6]) / (2 * w[3] + 1e-5)","textChars":33,"textLines":1,"bbox":[144,380,1030,40]}
+{"kind":"textbox","id":"sh/sn6psb21","slide":4,"name":"bullet-86-416","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,416,20,36]}
+{"kind":"textbox","id":"sh/d8fqlgjm","slide":4,"name":"bullet-text-86-416","text":"Kurtosis of the window","textPreview":"Kurtosis of the window","textChars":22,"textLines":1,"bbox":[114,416,1060,40]}
+{"kind":"textbox","id":"sh/e9orulk7","slide":4,"name":"label-Important-464","text":"Important:","textPreview":"Important:","textChars":10,"textLines":1,"bbox":[86,464,1088,28]}
+{"kind":"textbox","id":"sh/fah8nq1s","slide":4,"name":"text-498","text":"The JavaScript feature extraction must match the Python training pipeline exactly.","textPreview":"The JavaScript feature extraction must match the Python training pipeline exactly.","textChars":82,"textLines":1,"bbox":[86,498,1088,56]}
+{"kind":"notes","id":"nt/58ny3s","slide":4,"text":""}
+{"kind":"slide","id":"sl/hunvgz","slide":5,"title":"Slide 5: Converting the Model to JavaScript","textShapes":22}
+{"kind":"textbox","id":"sh/872pkjel","slide":5,"name":"slide-5-section","text":"Slide 5: Converting the Model to JavaScript","textPreview":"Slide 5: Converting the Model to JavaScript","textChars":43,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/76t8bex0","slide":5,"name":"slide-5-title","text":"From `.pkl` Model to JavaScript Function","textPreview":"From `.pkl` Model to JavaScript Function","textChars":40,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/m5k7i9wf","slide":5,"name":"slide-5-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/hwvqhov2","slide":5,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/gbmpo3eh","slide":5,"name":"bullet-text-86-200","text":"Load the trained model with joblib.","textPreview":"Load the trained model with joblib.","textChars":35,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/vad8fydw","slide":5,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/u947mtwb","slide":5,"name":"bullet-text-86-236","text":"Extract StandardScaler parameters:","textPreview":"Extract StandardScaler parameters:","textChars":34,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/50vql8vy","slide":5,"name":"bullet-86-272","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,272,20,36]}
+{"kind":"textbox","id":"sh/4zmpc3et","slide":5,"name":"bullet-text-86-272","text":"mean_","textPreview":"mean_","textChars":5,"textLines":1,"bbox":[144,272,1030,40]}
+{"kind":"textbox","id":"sh/6x8nip4v","slide":5,"name":"bullet-86-308","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,308,20,36]}
+{"kind":"textbox","id":"sh/ryh4bu5g","slide":5,"name":"bullet-text-86-308","text":"scale_","textPreview":"scale_","textChars":6,"textLines":1,"bbox":[144,308,1030,40]}
+{"kind":"textbox","id":"sh/szq5kzml","slide":5,"name":"bullet-86-344","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,344,20,36]}
+{"kind":"textbox","id":"sh/d0zmd4n6","slide":5,"name":"bullet-text-86-344","text":"Extract Linear SVM parameters:","textPreview":"Extract Linear SVM parameters:","textChars":30,"textLines":1,"bbox":[114,344,1060,40]}
+{"kind":"textbox","id":"sh/e1snmp4r","slide":5,"name":"bullet-86-380","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,380,20,36]}
+{"kind":"textbox","id":"sh/fm1ofu5c","slide":5,"name":"bullet-text-86-380","text":"coef_","textPreview":"coef_","textChars":5,"textLines":1,"bbox":[144,380,1030,40]}
+{"kind":"textbox","id":"sh/0na5ozmx","slide":5,"name":"bullet-86-416","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,416,20,36]}
+{"kind":"textbox","id":"sh/1oj6h43i","slide":5,"name":"bullet-text-86-416","text":"intercept_","textPreview":"intercept_","textChars":10,"textLines":1,"bbox":[144,416,1030,40]}
+{"kind":"textbox","id":"sh/u5ona54n","slide":5,"name":"bullet-86-452","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,452,20,36]}
+{"kind":"textbox","id":"sh/v6x43a58","slide":5,"name":"bullet-text-86-452","text":"classes_","textPreview":"classes_","textChars":8,"textLines":1,"bbox":[144,452,1030,40]}
+{"kind":"textbox","id":"sh/zadkb6l0","slide":5,"name":"bullet-86-488","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,488,20,36]}
+{"kind":"textbox","id":"sh/y9kji1kf","slide":5,"name":"bullet-text-86-488","text":"Generate pure JavaScript inference code.","textPreview":"Generate pure JavaScript inference code.","textChars":40,"textLines":1,"bbox":[114,488,1060,40]}
+{"kind":"textbox","id":"sh/lcv2dg3q","slide":5,"name":"label-Output File-536","text":"Output File:","textPreview":"Output File:","textChars":12,"textLines":1,"bbox":[86,536,1088,28]}
+{"kind":"textbox","id":"sh/kbm1kb25","slide":5,"name":"text-570","text":"deployment/scripts/svm_model.js","textPreview":"deployment/scripts/svm_model.js","textChars":31,"textLines":1,"bbox":[86,570,1088,56]}
+{"kind":"notes","id":"nt/hunvgz","slide":5,"text":""}
+{"kind":"slide","id":"sl/xkijf1","slide":6,"title":"Slide 6: JavaScript Model Runtime","textShapes":12}
+{"kind":"textbox","id":"sh/7ydkj6l4","slide":6,"name":"slide-6-section","text":"Slide 6: JavaScript Model Runtime","textPreview":"Slide 6: JavaScript Model Runtime","textChars":33,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/8zm1sb2p","slide":6,"name":"slide-6-title","text":"Pure JavaScript SVM Inference","textPreview":"Pure JavaScript SVM Inference","textChars":29,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/t0v2lg3a","slide":6,"name":"slide-6-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/ytkjm1kn","slide":6,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/jutkf6l8","slide":6,"name":"bullet-text-86-200","text":"scaleFeatures(features) reproduces StandardScaler.","textPreview":"scaleFeatures(features) reproduces StandardScaler.","textChars":50,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/kv21ob2d","slide":6,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/lwv2hw3y","slide":6,"name":"bullet-text-86-236","text":"scoreSVM(scaledFeatures) reproduces Linear SVM scoring.","textPreview":"scoreSVM(scaledFeatures) reproduces Linear SVM scoring.","textChars":55,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/a5kjihkb","slide":6,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/b6tkbmlw","slide":6,"name":"bullet-text-86-272","text":"predictPipeline(features) returns the final class.","textPreview":"predictPipeline(features) returns the final class.","textChars":50,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"textbox","id":"sh/7ihs7qpc","slide":6,"name":"bullet-86-308","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,308,20,36]}
+{"kind":"textbox","id":"sh/6h8rylor","slide":6,"name":"bullet-text-86-308","text":"No machine learning library is required in the browser.","textPreview":"No machine learning library is required in the browser.","textChars":55,"textLines":1,"bbox":[114,308,1060,40]}
+{"kind":"textbox","id":"sh/tkza9072","slide":6,"name":"label-Code Concept-356","text":"Code Concept:","textPreview":"Code Concept:","textChars":13,"textLines":1,"bbox":[86,356,1088,28]}
+{"kind":"shape","id":"sh/8jq90v6x","slide":6,"name":"code-panel-86-390","bbox":[86,390,1088,56]}
+{"kind":"textbox","id":"sh/fmhsbap8","slide":6,"name":"code-text-86-390","text":"const prediction = predictPipeline(features);","textPreview":"const prediction = predictPipeline(features);","textChars":45,"textLines":1,"bbox":[102,400,1056,36]}
+{"kind":"notes","id":"nt/xkijf1","slide":6,"text":""}
+{"kind":"slide","id":"sl/eqz4a1","slide":7,"title":"Slide 7: Deployment Folder Structure","textShapes":13}
+{"kind":"textbox","id":"sh/k7mpc3yp","slide":7,"name":"slide-7-section","text":"Slide 7: Deployment Folder Structure","textPreview":"Slide 7: Deployment Folder Structure","textChars":36,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/z6dojyhk","slide":7,"name":"slide-7-title","text":"Static Web App Structure","textPreview":"Static Web App Structure","textChars":24,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/y547atgz","slide":7,"name":"slide-7-rule","bbox":[64,168,1152,2]}
+{"kind":"shape","id":"sh/x4v6hoze","slide":7,"name":"code-panel-86-200","bbox":[86,200,1088,200]}
+{"kind":"textbox","id":"sh/c3mp8jyt","slide":7,"name":"code-text-86-200","text":"deployment/scripts/\n├── index.html\n├── app.js\n├── svm_model.js\n└── favicon.svg","textPreview":"deployment/scripts/ | ├── index.html | ├── app.js | ├── svm_model.js | └── favicon.svg","textChars":78,"textLines":5,"bbox":[102,210,1056,180]}
+{"kind":"textbox","id":"sh/b2dofeh8","slide":7,"name":"bullet-86-414","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,414,20,36]}
+{"kind":"textbox","id":"sh/a14769gn","slide":7,"name":"bullet-text-86-414","text":"index.html: UI layout, camera view, dashboard, controls","textPreview":"index.html: UI layout, camera view, dashboard, controls","textChars":55,"textLines":1,"bbox":[114,414,1060,40]}
+{"kind":"textbox","id":"sh/p0b6d4z2","slide":7,"name":"bullet-86-450","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,450,20,36]}
+{"kind":"textbox","id":"sh/oz254zix","slide":7,"name":"bullet-text-86-450","text":"app.js: webcam, MediaPipe, EAR, calibration, SVM, alerts","textPreview":"app.js: webcam, MediaPipe, EAR, calibration, SVM, alerts","textChars":56,"textLines":1,"bbox":[114,450,1060,40]}
+{"kind":"textbox","id":"sh/qpsfixs3","slide":7,"name":"bullet-86-486","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,486,20,36]}
+{"kind":"textbox","id":"sh/bq1gr298","slide":7,"name":"bullet-text-86-486","text":"svm_model.js: converted Linear SVM model","textPreview":"svm_model.js: converted Linear SVM model","textChars":40,"textLines":1,"bbox":[114,486,1060,40]}
+{"kind":"textbox","id":"sh/crahk7at","slide":7,"name":"bullet-86-522","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,522,20,36]}
+{"kind":"textbox","id":"sh/dsjytcre","slide":7,"name":"bullet-text-86-522","text":"favicon.svg: BlinkGuard shield-and-eye app icon","textPreview":"favicon.svg: BlinkGuard shield-and-eye app icon","textChars":47,"textLines":1,"bbox":[114,522,1060,40]}
+{"kind":"textbox","id":"sh/2l8fexsr","slide":7,"name":"label-Key Message-570","text":"Key Message:","textPreview":"Key Message:","textChars":12,"textLines":1,"bbox":[86,570,1088,28]}
+{"kind":"textbox","id":"sh/3mhgn29c","slide":7,"name":"text-604","text":"The entire app can be deployed as static files.","textPreview":"The entire app can be deployed as static files.","textChars":47,"textLines":1,"bbox":[86,604,1088,56]}
+{"kind":"notes","id":"nt/eqz4a1","slide":7,"text":""}
+{"kind":"slide","id":"sl/gwilb5","slide":8,"title":"Slide 8: Runtime Architecture","textShapes":19}
+{"kind":"textbox","id":"sh/8raxo7y5","slide":8,"name":"slide-8-section","text":"Slide 8: Runtime Architecture","textPreview":"Slide 8: Runtime Architecture","textChars":29,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/7q1wv2xk","slide":8,"name":"slide-8-title","text":"Real-Time Browser Pipeline","textPreview":"Real-Time Browser Pipeline","textChars":26,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/6psfmxgz","slide":8,"name":"slide-8-rule","bbox":[64,168,1152,2]}
+{"kind":"shape","id":"sh/lojetsfe","slide":8,"name":"process-step-1","bbox":[224,200,832,43]}
+{"kind":"textbox","id":"sh/knaxknyt","slide":8,"name":"process-step-text-1","text":"Webcam","textPreview":"Webcam","textChars":6,"textLines":1,"bbox":[244,207,792,30]}
+{"kind":"textbox","id":"sh/zm1wrih8","slide":8,"name":"process-arrow-1","text":"↓","textPreview":"↓","textChars":1,"textLines":1,"bbox":[624,241,32,22]}
+{"kind":"shape","id":"sh/y1sfidgn","slide":8,"name":"process-step-2","bbox":[224,253,832,43]}
+{"kind":"textbox","id":"sh/x0zepszi","slide":8,"name":"process-step-text-2","text":"MediaPipe FaceLandmarker JS","textPreview":"MediaPipe FaceLandmarker JS","textChars":27,"textLines":1,"bbox":[244,260,792,30]}
+{"kind":"textbox","id":"sh/czqxgnyx","slide":8,"name":"process-arrow-2","text":"↓","textPreview":"↓","textChars":1,"textLines":1,"bbox":[624,294,32,22]}
+{"kind":"shape","id":"sh/q1sv6x8n","slide":8,"name":"process-step-3","bbox":[224,306,832,43]}
+{"kind":"textbox","id":"sh/r2lcz298","slide":8,"name":"process-step-text-3","text":"Eye landmarks","textPreview":"Eye landmarks","textChars":13,"textLines":1,"bbox":[244,313,792,30]}
+{"kind":"textbox","id":"sh/s3ud87qt","slide":8,"name":"process-arrow-3","text":"↓","textPreview":"↓","textChars":1,"textLines":1,"bbox":[624,347,32,22]}
+{"kind":"shape","id":"sh/d43u1sre","slide":8,"name":"process-step-4","bbox":[224,359,832,43]}
+{"kind":"textbox","id":"sh/idsb2d8r","slide":8,"name":"process-step-text-4","text":"EAR calculation","textPreview":"EAR calculation","textChars":15,"textLines":1,"bbox":[244,366,792,30]}
+{"kind":"textbox","id":"sh/je1cvi9c","slide":8,"name":"process-arrow-4","text":"↓","textPreview":"↓","textChars":1,"textLines":1,"bbox":[624,400,32,22]}
+{"kind":"shape","id":"sh/4fat4nqx","slide":8,"name":"process-step-5","bbox":[224,412,832,43]}
+{"kind":"textbox","id":"sh/5gjuxsr2","slide":8,"name":"process-step-text-5","text":"Dynamic calibration","textPreview":"Dynamic calibration","textChars":19,"textLines":1,"bbox":[244,419,792,30]}
+{"kind":"textbox","id":"sh/u98byd8f","slide":8,"name":"process-arrow-5","text":"↓","textPreview":"↓","textChars":1,"textLines":1,"bbox":[624,453,32,22]}
+{"kind":"shape","id":"sh/vahcri90","slide":8,"name":"process-step-6","bbox":[224,465,832,43]}
+{"kind":"textbox","id":"sh/z2d0jalg","slide":8,"name":"process-step-text-6","text":"7-frame sliding window","textPreview":"7-frame sliding window","textChars":22,"textLines":1,"bbox":[244,472,792,30]}
+{"kind":"textbox","id":"sh/y14ja5kb","slide":8,"name":"process-arrow-6","text":"↓","textPreview":"↓","textChars":1,"textLines":1,"bbox":[624,506,32,22]}
+{"kind":"shape","id":"sh/l4vilk3m","slide":8,"name":"process-step-7","bbox":[224,518,832,43]}
+{"kind":"textbox","id":"sh/03m1cf21","slide":8,"name":"process-step-text-7","text":"Hybrid filter / SVM inference","textPreview":"Hybrid filter / SVM inference","textChars":29,"textLines":1,"bbox":[244,525,792,30]}
+{"kind":"textbox","id":"sh/n6x0nuls","slide":8,"name":"process-arrow-7","text":"↓","textPreview":"↓","textChars":1,"textLines":1,"bbox":[624,559,32,22]}
+{"kind":"shape","id":"sh/m54jepk7","slide":8,"name":"process-step-8","bbox":[224,571,832,43]}
+{"kind":"textbox","id":"sh/98fipk3y","slide":8,"name":"process-step-text-8","text":"Blink and drowsiness logic","textPreview":"Blink and drowsiness logic","textChars":26,"textLines":1,"bbox":[244,578,792,30]}
+{"kind":"textbox","id":"sh/8761gz2d","slide":8,"name":"process-arrow-8","text":"↓","textPreview":"↓","textChars":1,"textLines":1,"bbox":[624,612,32,22]}
+{"kind":"shape","id":"sh/3at0bqlo","slide":8,"name":"process-step-9","bbox":[224,624,832,43]}
+{"kind":"textbox","id":"sh/29kz2lk3","slide":8,"name":"process-step-text-9","text":"Dashboard + notifications","textPreview":"Dashboard + notifications","textChars":25,"textLines":1,"bbox":[244,631,792,30]}
+{"kind":"notes","id":"nt/gwilb5","slide":8,"text":"This architecture mirrors the Python realtime pipeline, but it runs fully in the browser."}
+{"kind":"slide","id":"sl/bg2c54","slide":9,"title":"Slide 9: Eye Tracking with MediaPipe JS","textShapes":14}
+{"kind":"textbox","id":"sh/5oralcfm","slide":9,"name":"slide-9-section","text":"Slide 9: Eye Tracking with MediaPipe JS","textPreview":"Slide 9: Eye Tracking with MediaPipe JS","textChars":39,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/ilgrqxwv","slide":9,"name":"slide-9-title","text":"Browser-Based Face and Eye Tracking","textPreview":"Browser-Based Face and Eye Tracking","textChars":35,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/3m9sj2xg","slide":9,"name":"slide-9-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/gjy9o7e5","slide":9,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/hk7ahcfa","slide":9,"name":"bullet-text-86-200","text":"Uses @mediapipe/tasks-vision.","textPreview":"Uses @mediapipe/tasks-vision.","textChars":29,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/uhgrmxwz","slide":9,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/vipsf2xk","slide":9,"name":"bullet-text-86-236","text":"Runs FaceLandmarker in video mode.","textPreview":"Runs FaceLandmarker in video mode.","textChars":34,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/8vy9knet","slide":9,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/tg7adsfe","slide":9,"name":"bullet-text-86-272","text":"Extracts facial landmarks directly from the webcam stream.","textPreview":"Extracts facial landmarks directly from the webcam stream.","textChars":58,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"textbox","id":"sh/1czu9wfa","slide":9,"name":"bullet-86-308","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,308,20,36]}
+{"kind":"textbox","id":"sh/0bqt0ryp","slide":9,"name":"bullet-text-86-308","text":"No video frame is uploaded to a server.","textPreview":"No video frame is uploaded to a server.","textChars":39,"textLines":1,"bbox":[114,308,1060,40]}
+{"kind":"textbox","id":"sh/fahc7mxk","slide":9,"name":"bullet-86-344","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,344,20,36]}
+{"kind":"textbox","id":"sh/e98byhgz","slide":9,"name":"bullet-text-86-344","text":"MediaPipe assets are loaded from CDN for MVP simplicity.","textPreview":"MediaPipe assets are loaded from CDN for MVP simplicity.","textChars":56,"textLines":1,"bbox":[114,344,1060,40]}
+{"kind":"textbox","id":"sh/d8fa5cfe","slide":9,"name":"label-Production Note-392","text":"Production Note:","textPreview":"Production Note:","textChars":16,"textLines":1,"bbox":[86,392,1088,28]}
+{"kind":"textbox","id":"sh/s76twryt","slide":9,"name":"text-426","text":"MediaPipe WASM/model files can be self-hosted later to reduce CDN dependency.","textPreview":"MediaPipe WASM/model files can be self-hosted later to reduce CDN dependency.","textChars":77,"textLines":1,"bbox":[86,426,1088,56]}
+{"kind":"notes","id":"nt/bg2c54","slide":9,"text":""}
+{"kind":"slide","id":"sl/7ejvai","slide":10,"title":"Slide 10: EAR Calculation in the Browser","textShapes":18}
+{"kind":"textbox","id":"sh/cbyt0j6p","slide":10,"name":"slide-10-section","text":"Slide 10: EAR Calculation in the Browser","textPreview":"Slide 10: EAR Calculation in the Browser","textChars":40,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/bqpsrep4","slide":10,"name":"slide-10-title","text":"Eye Aspect Ratio on Web Landmarks","textPreview":"Eye Aspect Ratio on Web Landmarks","textChars":33,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/qpgby9oj","slide":10,"name":"slide-10-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/lgruxo7m","slide":10,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/0fit4361","slide":10,"name":"bullet-text-86-200","text":"Left eye landmarks:","textPreview":"Left eye landmarks:","textChars":19,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/ze9cvypg","slide":10,"name":"bullet-86-236","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,236,20,36]}
+{"kind":"textbox","id":"sh/yd0b2tov","slide":10,"name":"bullet-text-86-236","text":"[33, 160, 158, 133, 153, 144]","textPreview":"[33, 160, 158, 133, 153, 144]","textChars":29,"textLines":1,"bbox":[144,236,1030,40]}
+{"kind":"textbox","id":"sh/9kbu187i","slide":10,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/8jit836x","slide":10,"name":"bullet-text-86-272","text":"Right eye landmarks:","textPreview":"Right eye landmarks:","textChars":20,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"textbox","id":"sh/i9cz6ps3","slide":10,"name":"bullet-86-308","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,308,20,36]}
+{"kind":"textbox","id":"sh/jal0zuto","slide":10,"name":"bullet-text-86-308","text":"[362, 385, 387, 263, 373, 380]","textPreview":"[362, 385, 387, 263, 373, 380]","textChars":30,"textLines":1,"bbox":[144,308,1030,40]}
+{"kind":"textbox","id":"sh/kbeh8za9","slide":10,"name":"bullet-86-344","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,344,20,36]}
+{"kind":"textbox","id":"sh/5cni1kbu","slide":10,"name":"bullet-text-86-344","text":"EAR formula:","textPreview":"EAR formula:","textChars":12,"textLines":1,"bbox":[114,344,1060,40]}
+{"kind":"shape","id":"sh/6dwzapsf","slide":10,"name":"code-panel-86-390","bbox":[86,390,1088,56]}
+{"kind":"textbox","id":"sh/7e503ut0","slide":10,"name":"code-text-86-390","text":"EAR = (||p2 - p6|| + ||p3 - p5||) / (2 * ||p1 - p4||)","textPreview":"EAR = (||p2 - p6|| + ||p3 - p5||) / (2 * ||p1 - p4||)","textChars":53,"textLines":1,"bbox":[102,400,1056,36]}
+{"kind":"textbox","id":"sh/sfehcza5","slide":10,"name":"bullet-86-460","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,460,20,36]}
+{"kind":"textbox","id":"sh/tgni54bq","slide":10,"name":"bullet-text-86-460","text":"Final raw EAR:","textPreview":"Final raw EAR:","textChars":14,"textLines":1,"bbox":[114,460,1060,40]}
+{"kind":"shape","id":"sh/mhszy5cv","slide":10,"name":"code-panel-86-506","bbox":[86,506,1088,56]}
+{"kind":"textbox","id":"sh/ni10ratg","slide":10,"name":"code-text-86-506","text":"rawEAR = Math.min(leftEAR, rightEAR);","textPreview":"rawEAR = Math.min(leftEAR, rightEAR);","textChars":37,"textLines":1,"bbox":[102,516,1056,36]}
+{"kind":"textbox","id":"sh/rmhwz698","slide":10,"name":"label-Reason-578","text":"Reason:","textPreview":"Reason:","textChars":7,"textLines":1,"bbox":[86,578,1088,28]}
+{"kind":"textbox","id":"sh/ql8f61sn","slide":10,"name":"text-612","text":"Using the smaller EAR improves sensitivity when one eye is partially occluded or estimated incorrectly.","textPreview":"Using the smaller EAR improves sensitivity when one eye is partially occluded or estimated incorrectly.","textChars":103,"textLines":1,"bbox":[86,612,1088,56]}
+{"kind":"notes","id":"nt/7ejvai","slide":10,"text":""}
+{"kind":"slide","id":"sl/t1wnq9","slide":11,"title":"Slide 11: Dynamic Calibration","textShapes":17}
+{"kind":"textbox","id":"sh/qto7axgn","slide":11,"name":"slide-11-section","text":"Slide 11: Dynamic Calibration","textPreview":"Slide 11: Dynamic Calibration","textChars":29,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/dwf6lsfy","slide":11,"name":"slide-11-title","text":"Personalized EAR Normalization","textPreview":"Personalized EAR Normalization","textChars":30,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/cv6pcnyt","slide":11,"name":"slide-11-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/zixon2x4","slide":11,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/exo7exgj","slide":11,"name":"bullet-text-86-200","text":"The app collects the first 15 EAR samples.","textPreview":"The app collects the first 15 EAR samples.","textChars":42,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/1kz6pcfa","slide":11,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/0jqpg7yp","slide":11,"name":"bullet-text-86-236","text":"Initial baseline:","textPreview":"Initial baseline:","textChars":17,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"shape","id":"sh/fmdobix0","slide":11,"name":"code-panel-86-282","bbox":[86,282,1088,56]}
+{"kind":"textbox","id":"sh/u14n2dgf","slide":11,"name":"code-text-86-282","text":"currentMax = max(first 15 raw EAR values)","textPreview":"currentMax = max(first 15 raw EAR values)","textChars":41,"textLines":1,"bbox":[102,292,1056,36]}
+{"kind":"textbox","id":"sh/wvy98j29","slide":11,"name":"bullet-86-352","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,352,20,36]}
+{"kind":"textbox","id":"sh/xwra1oje","slide":11,"name":"bullet-text-86-352","text":"Fallback baseline:","textPreview":"Fallback baseline:","textChars":18,"textLines":1,"bbox":[114,352,1060,40]}
+{"kind":"shape","id":"sh/atgr69k3","slide":11,"name":"code-panel-86-398","bbox":[86,398,1088,56]}
+{"kind":"textbox","id":"sh/vupsze1o","slide":11,"name":"code-text-86-398","text":"0.23","textPreview":"0.23","textChars":4,"textLines":1,"bbox":[102,408,1056,36]}
+{"kind":"textbox","id":"sh/4ji9cj25","slide":11,"name":"bullet-86-468","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,468,20,36]}
+{"kind":"textbox","id":"sh/5kra5ojq","slide":11,"name":"bullet-text-86-468","text":"During runtime, the baseline is updated with expanding max.","textPreview":"During runtime, the baseline is updated with expanding max.","textChars":59,"textLines":1,"bbox":[114,468,1060,40]}
+{"kind":"textbox","id":"sh/ix0ra9kz","slide":11,"name":"bullet-86-504","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,504,20,36]}
+{"kind":"textbox","id":"sh/ji9s3e1k","slide":11,"name":"bullet-text-86-504","text":"Normalized EAR:","textPreview":"Normalized EAR:","textChars":15,"textLines":1,"bbox":[114,504,1060,40]}
+{"kind":"shape","id":"sh/0ne90z21","slide":11,"name":"code-panel-86-550","bbox":[86,550,1088,56]}
+{"kind":"textbox","id":"sh/lonqt4j6","slide":11,"name":"code-text-86-550","text":"earNorm = rawEAR / currentMax;","textPreview":"earNorm = rawEAR / currentMax;","textChars":30,"textLines":1,"bbox":[102,560,1056,36]}
+{"kind":"textbox","id":"sh/1kfqxgva","slide":11,"name":"label-Key Message-622","text":"Key Message:","textPreview":"Key Message:","textChars":12,"textLines":1,"bbox":[86,622,1088,28]}
+{"kind":"textbox","id":"sh/0j6p4bup","slide":11,"name":"text-656","text":"Dynamic calibration adapts the system to different users and eye shapes.","textPreview":"Dynamic calibration adapts the system to different users and eye shapes.","textChars":72,"textLines":1,"bbox":[86,656,1088,56]}
+{"kind":"notes","id":"nt/t1wnq9","slide":11,"text":""}
+{"kind":"slide","id":"sl/42h5kg","slide":12,"title":"Slide 12: Sampling Rate and Sliding Window","textShapes":14}
+{"kind":"textbox","id":"sh/ratkjmxs","slide":12,"name":"slide-12-section","text":"Slide 12: Sampling Rate and Sliding Window","textPreview":"Slide 12: Sampling Rate and Sliding Window","textChars":42,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/sb2lc7ex","slide":12,"name":"slide-12-title","text":"Matching the Training-Time Temporal Setup","textPreview":"Matching the Training-Time Temporal Setup","textChars":41,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/dcb2lcfi","slide":12,"name":"slide-12-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/i50j6xwv","slide":12,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/369kf2xg","slide":12,"name":"bullet-text-86-200","text":"The model was trained on EAR sequences sampled around 15 FPS.","textPreview":"The model was trained on EAR sequences sampled around 15 FPS.","textChars":61,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/47i187e1","slide":12,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/58r2hcfm","slide":12,"name":"bullet-text-86-236","text":"The browser does not run inference on every animation frame.","textPreview":"The browser does not run inference on every animation frame.","textChars":60,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/2143i1wf","slide":12,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/n2dkr6xk","slide":12,"name":"bullet-text-86-272","text":"Sampling interval:","textPreview":"Sampling interval:","textChars":18,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"shape","id":"sh/76l8fex0","slide":12,"name":"code-panel-86-318","bbox":[86,318,1088,56]}
+{"kind":"textbox","id":"sh/65c769wf","slide":12,"name":"code-text-86-318","text":"SAMPLE_INTERVAL_MS = 1000 / 15;","textPreview":"SAMPLE_INTERVAL_MS = 1000 / 15;","textChars":31,"textLines":1,"bbox":[102,328,1056,36]}
+{"kind":"textbox","id":"sh/t83qh4f6","slide":12,"name":"bullet-86-388","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,388,20,36]}
+{"kind":"textbox","id":"sh/s7up8jel","slide":12,"name":"bullet-text-86-388","text":"Sliding window size:","textPreview":"Sliding window size:","textChars":20,"textLines":1,"bbox":[114,388,1060,40]}
+{"kind":"shape","id":"sh/fa58jexc","slide":12,"name":"code-panel-86-434","bbox":[86,434,1088,56]}
+{"kind":"textbox","id":"sh/u9c7a9wr","slide":12,"name":"code-text-86-434","text":"WINDOW_SIZE = 7;","textPreview":"WINDOW_SIZE = 7;","textChars":16,"textLines":1,"bbox":[102,444,1056,36]}
+{"kind":"textbox","id":"sh/hcnqlofi","slide":12,"name":"bullet-86-504","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,504,20,36]}
+{"kind":"textbox","id":"sh/gbepcjex","slide":12,"name":"bullet-text-86-504","text":"Inference only starts after the 7-frame window is full.","textPreview":"Inference only starts after the 7-frame window is full.","textChars":55,"textLines":1,"bbox":[114,504,1060,40]}
+{"kind":"notes","id":"nt/42h5kg","slide":12,"text":"This keeps the web runtime consistent with the training pipeline."}
+{"kind":"slide","id":"sl/2onb2u","slide":13,"title":"Slide 13: Hybrid Heuristic Filter","textShapes":15}
+{"kind":"textbox","id":"sh/o76t4zqh","slide":13,"name":"slide-13-section","text":"Slide 13: Hybrid Heuristic Filter","textPreview":"Slide 13: Hybrid Heuristic Filter","textChars":33,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/36xcbupc","slide":13,"name":"slide-13-title","text":"Reducing Unnecessary Model Calls","textPreview":"Reducing Unnecessary Model Calls","textChars":32,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/25ob2p8r","slide":13,"name":"slide-13-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/dwzuh47e","slide":13,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/cbqt8zqt","slide":13,"name":"bullet-text-86-200","text":"If all normalized EAR values in the window are high, the eye is considered open.","textPreview":"If all normalized EAR values in the window are high, the eye is considered open.","textChars":80,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"shape","id":"sh/bahcfep8","slide":13,"name":"code-panel-86-246","bbox":[86,246,1088,128]}
+{"kind":"textbox","id":"sh/q98b698n","slide":13,"name":"code-text-86-246","text":"if (Math.min(slidingWindow) >= 0.5) {\n  prediction = 0;\n}","textPreview":"if (Math.min(slidingWindow) >= 0.5) { |   prediction = 0; | }","textChars":57,"textLines":3,"bbox":[102,256,1056,108]}
+{"kind":"textbox","id":"sh/tgva5kru","slide":13,"name":"bullet-86-388","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,388,20,36]}
+{"kind":"textbox","id":"sh/sfmtwfqp","slide":13,"name":"bullet-text-86-388","text":"SVM inference only runs when the window looks suspicious.","textPreview":"SVM inference only runs when the window looks suspicious.","textChars":57,"textLines":1,"bbox":[114,388,1060,40]}
+{"kind":"textbox","id":"sh/ep07edwz","slide":13,"name":"bullet-86-424","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,424,20,36]}
+{"kind":"textbox","id":"sh/fq987ix4","slide":13,"name":"bullet-text-86-424","text":"The dashboard shows:","textPreview":"The dashboard shows:","textChars":20,"textLines":1,"bbox":[114,424,1060,40]}
+{"kind":"textbox","id":"sh/0r29gnep","slide":13,"name":"bullet-86-460","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,460,20,36]}
+{"kind":"textbox","id":"sh/1cbq9sfa","slide":13,"name":"bullet-text-86-460","text":"CPU Saved","textPreview":"CPU Saved","textChars":9,"textLines":1,"bbox":[144,460,1030,40]}
+{"kind":"textbox","id":"sh/2dkrixwv","slide":13,"name":"bullet-86-496","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,496,20,36]}
+{"kind":"textbox","id":"sh/net8b2xg","slide":13,"name":"bullet-text-86-496","text":"CPU Mode: Filter or SVM","textPreview":"CPU Mode: Filter or SVM","textChars":23,"textLines":1,"bbox":[144,496,1030,40]}
+{"kind":"textbox","id":"sh/of29k7e1","slide":13,"name":"label-Key Message-544","text":"Key Message:","textPreview":"Key Message:","textChars":12,"textLines":1,"bbox":[86,544,1088,28]}
+{"kind":"textbox","id":"sh/pgbqdcfm","slide":13,"name":"text-578","text":"The hybrid filter reduces CPU usage while preserving real-time responsiveness.","textPreview":"The hybrid filter reduces CPU usage while preserving real-time responsiveness.","textChars":78,"textLines":1,"bbox":[86,578,1088,56]}
+{"kind":"notes","id":"nt/2onb2u","slide":13,"text":""}
+{"kind":"slide","id":"sl/lyd5st","slide":14,"title":"Slide 14: BlinkGuard Web App Features","textShapes":22}
+{"kind":"textbox","id":"sh/3elo3ylk","slide":14,"name":"slide-14-section","text":"Slide 14: BlinkGuard Web App Features","textPreview":"Slide 14: BlinkGuard Web App Features","textChars":37,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/4fupc3m5","slide":14,"name":"slide-14-title","text":"Current BlinkGuard Features","textPreview":"Current BlinkGuard Features","textChars":27,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/pgn6583q","slide":14,"name":"slide-14-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/upc76t43","slide":14,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/fqlozyl8","slide":14,"name":"bullet-text-86-200","text":"Start, stop, and reset camera session","textPreview":"Start, stop, and reset camera session","textChars":37,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/grup83mt","slide":14,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/hc361o3e","slide":14,"name":"bullet-text-86-236","text":"Real-time eye landmark overlay","textPreview":"Real-time eye landmark overlay","textChars":30,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/6lsn294r","slide":14,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/7m1ovelc","slide":14,"name":"bullet-text-86-272","text":"Blink count during the session","textPreview":"Blink count during the session","textChars":30,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"textbox","id":"sh/valo72ho","slide":14,"name":"bullet-86-308","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,308,20,36]}
+{"kind":"textbox","id":"sh/a9c7exg3","slide":14,"name":"bullet-text-86-308","text":"Blinks in the last 60 seconds","textPreview":"Blinks in the last 60 seconds","textChars":29,"textLines":1,"bbox":[114,308,1060,40]}
+{"kind":"textbox","id":"sh/xwn69szu","slide":14,"name":"bullet-86-344","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,344,20,36]}
+{"kind":"textbox","id":"sh/wvupgny9","slide":14,"name":"bullet-text-86-344","text":"3-minute blink rate trend","textPreview":"3-minute blink rate trend","textChars":25,"textLines":1,"bbox":[114,344,1060,40]}
+{"kind":"textbox","id":"sh/jy58b2x0","slide":14,"name":"bullet-86-380","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,380,20,36]}
+{"kind":"textbox","id":"sh/ixw7ixgf","slide":14,"name":"bullet-text-86-380","text":"No-blink streak timer","textPreview":"No-blink streak timer","textChars":21,"textLines":1,"bbox":[114,380,1060,40]}
+{"kind":"textbox","id":"sh/50nqdcfq","slide":14,"name":"bullet-86-416","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,416,20,36]}
+{"kind":"textbox","id":"sh/kzepk7y5","slide":14,"name":"bullet-text-86-416","text":"Drowsy event counter","textPreview":"Drowsy event counter","textChars":20,"textLines":1,"bbox":[114,416,1060,40]}
+{"kind":"textbox","id":"sh/z21ozihg","slide":14,"name":"bullet-86-452","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,452,20,36]}
+{"kind":"textbox","id":"sh/y1s76dgv","slide":14,"name":"bullet-text-86-452","text":"SVM prediction display","textPreview":"SVM prediction display","textChars":22,"textLines":1,"bbox":[114,452,1060,40]}
+{"kind":"textbox","id":"sh/2x0rel0j","slide":14,"name":"bullet-86-488","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,488,20,36]}
+{"kind":"textbox","id":"sh/3y9s7qh4","slide":14,"name":"bullet-text-86-488","text":"CPU saving display","textPreview":"CPU saving display","textChars":18,"textLines":1,"bbox":[114,488,1060,40]}
+{"kind":"textbox","id":"sh/ozi9gbip","slide":14,"name":"bullet-86-524","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,524,20,36]}
+{"kind":"textbox","id":"sh/p0ra9gza","slide":14,"name":"bullet-text-86-524","text":"Notification permission status","textPreview":"Notification permission status","textChars":30,"textLines":1,"bbox":[114,524,1060,40]}
+{"kind":"notes","id":"nt/lyd5st","slide":14,"text":"The web app evolved from a drowsiness demo into a lightweight eye-health assistant."}
+{"kind":"slide","id":"sl/ihnun3","slide":15,"title":"Slide 15: Blink Rate Monitoring","textShapes":17}
+{"kind":"textbox","id":"sh/zydkvm9w","slide":15,"name":"slide-15-section","text":"Slide 15: Blink Rate Monitoring","textPreview":"Slide 15: Blink Rate Monitoring","textChars":31,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/0zm1orah","slide":15,"name":"slide-15-title","text":"Detecting Low Blink Rate","textPreview":"Detecting Low Blink Rate","textChars":24,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/l0v2xcr2","slide":15,"name":"slide-15-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/q9kjixsf","slide":15,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/batkr29k","slide":15,"name":"bullet-text-86-200","text":"The app stores timestamps for detected blink events.","textPreview":"The app stores timestamps for detected blink events.","textChars":52,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/cbm1k7a5","slide":15,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/dcv2tcrq","slide":15,"name":"bullet-text-86-236","text":"Blink rate is calculated from the last 60 seconds.","textPreview":"Blink rate is calculated from the last 60 seconds.","textChars":50,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/25kjexs3","slide":15,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/36t0n2to","slide":15,"name":"bullet-text-86-272","text":"Default target:","textPreview":"Default target:","textChars":15,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"shape","id":"sh/7ah4futg","slide":15,"name":"code-panel-86-318","bbox":[86,318,1088,56]}
+{"kind":"textbox","id":"sh/698n6psv","slide":15,"name":"code-text-86-318","text":"12 blinks per minute","textPreview":"12 blinks per minute","textChars":20,"textLines":1,"bbox":[102,328,1056,36]}
+{"kind":"textbox","id":"sh/tczmhkr6","slide":15,"name":"bullet-86-388","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,388,20,36]}
+{"kind":"textbox","id":"sh/8bq58zal","slide":15,"name":"bullet-text-86-388","text":"Warning levels:","textPreview":"Warning levels:","textChars":15,"textLines":1,"bbox":[114,388,1060,40]}
+{"kind":"textbox","id":"sh/ve14ju9c","slide":15,"name":"bullet-86-424","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,424,20,36]}
+{"kind":"textbox","id":"sh/ud8napsr","slide":15,"name":"bullet-text-86-424","text":"< 12/min: Low blink rate","textPreview":"< 12/min: Low blink rate","textChars":24,"textLines":1,"bbox":[144,424,1030,40]}
+{"kind":"textbox","id":"sh/hgjml4ri","slide":15,"name":"bullet-86-460","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,460,20,36]}
+{"kind":"textbox","id":"sh/gfa5czax","slide":15,"name":"bullet-text-86-460","text":"< 7/min: Very low blink rate","textPreview":"< 7/min: Very low blink rate","textChars":28,"textLines":1,"bbox":[144,460,1030,40]}
+{"kind":"textbox","id":"sh/bix47at8","slide":15,"name":"label-Use Case-508","text":"Use Case:","textPreview":"Use Case:","textChars":9,"textLines":1,"bbox":[86,508,1088,28]}
+{"kind":"textbox","id":"sh/aho3y5sn","slide":15,"name":"text-542","text":"Warn users when they focus too long and blink less than expected.","textPreview":"Warn users when they focus too long and blink less than expected.","textChars":65,"textLines":1,"bbox":[86,542,1088,56]}
+{"kind":"notes","id":"nt/ihnun3","slide":15,"text":""}
+{"kind":"slide","id":"sl/qo6rjf","slide":16,"title":"Slide 16: No-Blink Streak Warning","textShapes":15}
+{"kind":"textbox","id":"sh/udovqh03","slide":16,"name":"slide-16-section","text":"Slide 16: No-Blink Streak Warning","textPreview":"Slide 16: No-Blink Streak Warning","textChars":33,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/h0zelcju","slide":16,"name":"slide-16-title","text":"Alerting Users Who Forget to Blink","textPreview":"Alerting Users Who Forget to Blink","textChars":34,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/gf6ds7i9","slide":16,"name":"slide-16-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/7axwf21c","slide":16,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/69ovmxk7","slide":16,"name":"bullet-text-86-200","text":"The app tracks time since the last detected blink.","textPreview":"The app tracks time since the last detected blink.","textChars":50,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/tcfehcji","slide":16,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/8b6do7ix","slide":16,"name":"bullet-text-86-236","text":"Warning threshold:","textPreview":"Warning threshold:","textChars":18,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"shape","id":"sh/r6hwr61w","slide":16,"name":"code-panel-86-282","bbox":[86,282,1088,56]}
+{"kind":"textbox","id":"sh/q58vy10b","slide":16,"name":"code-text-86-282","text":"LONG_NO_BLINK_MS = 15000;","textPreview":"LONG_NO_BLINK_MS = 15000;","textChars":25,"textLines":1,"bbox":[102,292,1056,36]}
+{"kind":"textbox","id":"sh/gnyxczyp","slide":16,"name":"bullet-86-352","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,352,20,36]}
+{"kind":"textbox","id":"sh/1o7yl4fa","slide":16,"name":"bullet-text-86-352","text":"If the user does not blink for over 15 seconds:","textPreview":"If the user does not blink for over 15 seconds:","textChars":47,"textLines":1,"bbox":[114,352,1060,40]}
+{"kind":"textbox","id":"sh/e1gfapgz","slide":16,"name":"bullet-86-388","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,388,20,36]}
+{"kind":"textbox","id":"sh/f2pgjux4","slide":16,"name":"bullet-text-86-388","text":"Web warning is shown.","textPreview":"Web warning is shown.","textChars":21,"textLines":1,"bbox":[144,388,1030,40]}
+{"kind":"textbox","id":"sh/szyx8fyt","slide":16,"name":"bullet-86-424","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,424,20,36]}
+{"kind":"textbox","id":"sh/t07yhkfe","slide":16,"name":"bullet-text-86-424","text":"System notification can be sent.","textPreview":"System notification can be sent.","textChars":32,"textLines":1,"bbox":[144,424,1030,40]}
+{"kind":"textbox","id":"sh/6xwf6pgn","slide":16,"name":"label-Key Message-472","text":"Key Message:","textPreview":"Key Message:","textChars":12,"textLines":1,"bbox":[86,472,1088,28]}
+{"kind":"textbox","id":"sh/ry5gfax8","slide":16,"name":"text-506","text":"This feature targets users who stare at the screen during long focus sessions.","textPreview":"This feature targets users who stare at the screen during long focus sessions.","textChars":78,"textLines":1,"bbox":[86,506,1088,56]}
+{"kind":"notes","id":"nt/qo6rjf","slide":16,"text":""}
+{"kind":"slide","id":"sl/vht06r","slide":17,"title":"Slide 17: Drowsiness Warning","textShapes":11}
+{"kind":"textbox","id":"sh/kreds725","slide":17,"name":"slide-17-section","text":"Slide 17: Drowsiness Warning","textPreview":"Slide 17: Drowsiness Warning","textChars":28,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/jq5cz2lk","slide":17,"name":"slide-17-title","text":"Detecting Long Eye Closure","textPreview":"Detecting Long Eye Closure","textChars":26,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/ipcvqxkz","slide":17,"name":"slide-17-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/xo3uxs3e","slide":17,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/wnudo72t","slide":17,"name":"bullet-text-86-200","text":"The SVM predicts class 2 for sleep / long closure.","textPreview":"The SVM predicts class 2 for sleep / long closure.","textChars":50,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/vmlcv2l8","slide":17,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/alcvmxkn","slide":17,"name":"bullet-text-86-236","text":"The app uses temporal smoothing:","textPreview":"The app uses temporal smoothing:","textChars":32,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"shape","id":"sh/hk7e9wji","slide":17,"name":"code-panel-86-282","bbox":[86,282,1088,92]}
+{"kind":"textbox","id":"sh/gjyd0r2d","slide":17,"name":"code-text-86-282","text":"DROWSY_HISTORY_SIZE = 15;\nDROWSY_VOTES_REQUIRED = 10;","textPreview":"DROWSY_HISTORY_SIZE = 15; | DROWSY_VOTES_REQUIRED = 10;","textChars":53,"textLines":2,"bbox":[102,292,1056,72]}
+{"kind":"textbox","id":"sh/mtwnu94z","slide":17,"name":"bullet-86-388","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,388,20,36]}
+{"kind":"textbox","id":"sh/nu543e54","slide":17,"name":"bullet-text-86-388","text":"If enough recent predictions are class 2, the app triggers a drowsiness warning.","textPreview":"If enough recent predictions are class 2, the app triggers a drowsiness warning.","textChars":80,"textLines":1,"bbox":[114,388,1060,40]}
+{"kind":"textbox","id":"sh/8ve5wjmp","slide":17,"name":"bullet-86-424","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,424,20,36]}
+{"kind":"textbox","id":"sh/9wnm5ona","slide":17,"name":"bullet-text-86-424","text":"Drowsy events are counted in the dashboard.","textPreview":"Drowsy events are counted in the dashboard.","textChars":43,"textLines":1,"bbox":[114,424,1060,40]}
+{"kind":"notes","id":"nt/vht06r","slide":17,"text":"This prevents short blinks from being treated as sleep."}
+{"kind":"slide","id":"sl/uc570p","slide":18,"title":"Slide 18: System Notifications","textShapes":19}
+{"kind":"textbox","id":"sh/i5g36t07","slide":18,"name":"slide-18-section","text":"Slide 18: System Notifications","textPreview":"Slide 18: System Notifications","textChars":30,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/587mhojy","slide":18,"name":"slide-18-title","text":"Alerts Outside the Web Page","textPreview":"Alerts Outside the Web Page","textChars":27,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/47yl83id","slide":18,"name":"slide-18-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/v25kbe1g","slide":18,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/u1w3290b","slide":18,"name":"bullet-text-86-200","text":"Uses the Browser Notification API.","textPreview":"Uses the Browser Notification API.","textChars":34,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/h47mdojm","slide":18,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/g3el4ji1","slide":18,"name":"bullet-text-86-236","text":"User enables alerts with Enable Notifications.","textPreview":"User enables alerts with Enable Notifications.","textChars":46,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/fy94ni10","slide":18,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/ex03ed0f","slide":18,"name":"bullet-text-86-272","text":"Notifications can be sent for:","textPreview":"Notifications can be sent for:","textChars":30,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"textbox","id":"sh/8nqxkfmx","slide":18,"name":"bullet-86-308","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,308,20,36]}
+{"kind":"textbox","id":"sh/9ozed03i","slide":18,"name":"bullet-text-86-308","text":"Long no-blink streak","textPreview":"Long no-blink streak","textChars":20,"textLines":1,"bbox":[144,308,1030,40]}
+{"kind":"textbox","id":"sh/ml8fi54r","slide":18,"name":"bullet-86-344","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,344,20,36]}
+{"kind":"textbox","id":"sh/nmhwbalc","slide":18,"name":"bullet-text-86-344","text":"Low blink rate","textPreview":"Low blink rate","textChars":14,"textLines":1,"bbox":[144,344,1030,40]}
+{"kind":"textbox","id":"sh/0zqxgvml","slide":18,"name":"bullet-86-380","text":"–","textPreview":"–","textChars":1,"textLines":1,"bbox":[114,380,20,36]}
+{"kind":"textbox","id":"sh/lkze9036","slide":18,"name":"bullet-text-86-380","text":"Drowsiness warning","textPreview":"Drowsiness warning","textChars":18,"textLines":1,"bbox":[144,380,1030,40]}
+{"kind":"textbox","id":"sh/yxofel4v","slide":18,"name":"bullet-86-416","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,416,20,36]}
+{"kind":"textbox","id":"sh/zyhw7qlg","slide":18,"name":"bullet-text-86-416","text":"Cooldown prevents spam:","textPreview":"Cooldown prevents spam:","textChars":23,"textLines":1,"bbox":[114,416,1060,40]}
+{"kind":"shape","id":"sh/cv6dcvmp","slide":18,"name":"code-panel-86-462","bbox":[86,462,1088,56]}
+{"kind":"textbox","id":"sh/dwfe5g3a","slide":18,"name":"code-text-86-462","text":"NOTIFICATION_COOLDOWN_MS = 60000;","textPreview":"NOTIFICATION_COOLDOWN_MS = 60000;","textChars":33,"textLines":1,"bbox":[102,472,1056,36]}
+{"kind":"textbox","id":"sh/ds7u9cfy","slide":18,"name":"label-Example Notification-534","text":"Example Notification:","textPreview":"Example Notification:","textChars":21,"textLines":1,"bbox":[86,534,1088,28]}
+{"kind":"textbox","id":"sh/srydg7ed","slide":18,"name":"text-568","text":"“You have not blinked for X seconds. Blink a few times and look away from the screen.”","textPreview":"“You have not blinked for X seconds. Blink a few times and look away from the screen.”","textChars":86,"textLines":1,"bbox":[86,568,1088,56]}
+{"kind":"notes","id":"nt/uc570p","slide":18,"text":""}
+{"kind":"slide","id":"sl/hdqbgl","slide":19,"title":"Slide 19: Deployment on Cloudflare Pages","textShapes":15}
+{"kind":"textbox","id":"sh/ydcvydgf","slide":19,"name":"slide-19-section","text":"Slide 19: Deployment on Cloudflare Pages","textPreview":"Slide 19: Deployment on Cloudflare Pages","textChars":40,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/lg3et8fq","slide":19,"name":"slide-19-title","text":"Static Hosting with Cloudflare Pages","textPreview":"Static Hosting with Cloudflare Pages","textChars":36,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/kfud03e5","slide":19,"name":"slide-19-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/ba1wnyxo","slide":19,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/a9svutg3","slide":19,"name":"bullet-text-86-200","text":"No backend server required.","textPreview":"No backend server required.","textChars":27,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/xc3ep8fu","slide":19,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/wbudw3y9","slide":19,"name":"bullet-text-86-236","text":"No build command required.","textPreview":"No build command required.","textChars":26,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/nm1wjexs","slide":19,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/mlsvqtg7","slide":19,"name":"bullet-text-86-272","text":"Output directory:","textPreview":"Output directory:","textChars":17,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"shape","id":"sh/43yhgjmt","slide":19,"name":"code-panel-86-318","bbox":[86,318,1088,56]}
+{"kind":"textbox","id":"sh/p47y9one","slide":19,"name":"code-text-86-318","text":"deployment/scripts","textPreview":"deployment/scripts","textChars":18,"textLines":1,"bbox":[102,328,1056,36]}
+{"kind":"textbox","id":"sh/2hwzet43","slide":19,"name":"bullet-86-388","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,388,20,36]}
+{"kind":"textbox","id":"sh/325g7e5o","slide":19,"name":"bullet-text-86-388","text":"Cloudflare provides HTTPS by default.","textPreview":"Cloudflare provides HTTPS by default.","textChars":37,"textLines":1,"bbox":[114,388,1060,40]}
+{"kind":"textbox","id":"sh/gfehcj6x","slide":19,"name":"bullet-86-424","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,424,20,36]}
+{"kind":"textbox","id":"sh/hgny5oni","slide":19,"name":"bullet-text-86-424","text":"HTTPS is required for webcam and notification APIs outside localhost.","textPreview":"HTTPS is required for webcam and notification APIs outside localhost.","textChars":69,"textLines":1,"bbox":[114,424,1060,40]}
+{"kind":"textbox","id":"sh/udwfa9or","slide":19,"name":"label-Key Message-472","text":"Key Message:","textPreview":"Key Message:","textChars":12,"textLines":1,"bbox":[86,472,1088,28]}
+{"kind":"textbox","id":"sh/fe5g3e5c","slide":19,"name":"text-506","text":"BlinkGuard can be deployed as a free or low-cost static web app.","textPreview":"BlinkGuard can be deployed as a free or low-cost static web app.","textChars":64,"textLines":1,"bbox":[86,506,1088,56]}
+{"kind":"notes","id":"nt/hdqbgl","slide":19,"text":""}
+{"kind":"slide","id":"sl/11wg0b","slide":20,"title":"Slide 20: Deployment Summary","textShapes":16}
+{"kind":"textbox","id":"sh/8jaxozm9","slide":20,"name":"slide-20-section","text":"Slide 20: Deployment Summary","textPreview":"Slide 20: Deployment Summary","textChars":28,"textLines":1,"bbox":[64,34,480,26]}
+{"kind":"textbox","id":"sh/ni1wfulo","slide":20,"name":"slide-20-title","text":"Final Deployment Outcome","textPreview":"Final Deployment Outcome","textChars":24,"textLines":1,"bbox":[64,74,1032,88]}
+{"kind":"shape","id":"sh/mxsfmp4j","slide":20,"name":"slide-20-rule","bbox":[64,168,1152,2]}
+{"kind":"textbox","id":"sh/lwjetk3y","slide":20,"name":"bullet-86-200","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,200,20,36]}
+{"kind":"textbox","id":"sh/0vaxkfmd","slide":20,"name":"bullet-text-86-200","text":"Python SVM model was converted to pure JavaScript.","textPreview":"Python SVM model was converted to pure JavaScript.","textChars":50,"textLines":1,"bbox":[114,200,1060,40]}
+{"kind":"textbox","id":"sh/zu1wruls","slide":20,"name":"bullet-86-236","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,236,20,36]}
+{"kind":"textbox","id":"sh/ytsfip47","slide":20,"name":"bullet-text-86-236","text":"MediaPipe JS handles real-time face and eye tracking.","textPreview":"MediaPipe JS handles real-time face and eye tracking.","textChars":53,"textLines":1,"bbox":[114,236,1060,40]}
+{"kind":"textbox","id":"sh/dsjepk3m","slide":20,"name":"bullet-86-272","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,272,20,36]}
+{"kind":"textbox","id":"sh/crqdgfm1","slide":20,"name":"bullet-text-86-272","text":"EAR-based TimeSeries logic runs fully in the browser.","textPreview":"EAR-based TimeSeries logic runs fully in the browser.","textChars":53,"textLines":1,"bbox":[114,272,1060,40]}
+{"kind":"textbox","id":"sh/2dwva9c7","slide":20,"name":"bullet-86-308","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,308,20,36]}
+{"kind":"textbox","id":"sh/ne5wjeds","slide":20,"name":"bullet-text-86-308","text":"BlinkGuard monitors blinking behavior and drowsiness.","textPreview":"BlinkGuard monitors blinking behavior and drowsiness.","textChars":53,"textLines":1,"bbox":[114,308,1060,40]}
+{"kind":"textbox","id":"sh/ofyxcjud","slide":20,"name":"bullet-86-344","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,344,20,36]}
+{"kind":"textbox","id":"sh/pg7elovy","slide":20,"name":"bullet-text-86-344","text":"System notifications extend alerts beyond the web UI.","textPreview":"System notifications extend alerts beyond the web UI.","textChars":53,"textLines":1,"bbox":[114,344,1060,40]}
+{"kind":"textbox","id":"sh/epwv69cb","slide":20,"name":"bullet-86-380","text":"•","textPreview":"•","textChars":1,"textLines":1,"bbox":[86,380,20,36]}
+{"kind":"textbox","id":"sh/fq5wfedw","slide":20,"name":"bullet-text-86-380","text":"The app is ready for static hosting on Cloudflare Pages.","textPreview":"The app is ready for static hosting on Cloudflare Pages.","textChars":56,"textLines":1,"bbox":[114,380,1060,40]}
+{"kind":"textbox","id":"sh/0bed8juh","slide":20,"name":"label-Closing Message-428","text":"Closing Message:","textPreview":"Closing Message:","textChars":16,"textLines":1,"bbox":[86,428,1088,28]}
+{"kind":"textbox","id":"sh/1cneh4v2","slide":20,"name":"text-462","text":"BlinkGuard demonstrates how a lightweight ML model can become a privacy-friendly, real-time web application without server-side inference.","textPreview":"BlinkGuard demonstrates how a lightweight ML model can become a privacy-friendly, real-time web application without server-side inference.","textChars":138,"textLines":1,"bbox":[86,462,1088,56]}
+{"kind":"notes","id":"nt/11wg0b","slide":20,"text":""}
