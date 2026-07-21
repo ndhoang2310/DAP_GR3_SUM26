@@ -12,12 +12,16 @@ const SAMPLE_INTERVAL_MS = 1000 / 15;
 const HYBRID_THRESHOLD = 0.5;
 const DROWSY_HISTORY_SIZE = 15;
 const DROWSY_VOTES_REQUIRED = 10;
+const BLINK_REARM_OPEN_WINDOWS = 3;
+const BLINK_REARM_EAR_THRESHOLD = 0.7;
+const MIN_BLINK_INTERVAL_MS = 300;
 const TARGET_BLINKS_PER_MIN = 12;
 const VERY_LOW_BLINKS_PER_MIN = 7;
 const LONG_NO_BLINK_MS = 15000;
 const BLINK_RATE_WINDOW_MS = 60000;
 const TREND_WINDOW_MS = 180000;
 const NOTIFICATION_COOLDOWN_MS = 60000;
+const WARNING_HOLD_MS = 5000;
 
 const LEFT_EYE_EAR_IDX = [33, 160, 158, 133, 153, 144];
 const RIGHT_EYE_EAR_IDX = [362, 385, 387, 263, 373, 380];
@@ -38,9 +42,16 @@ const state = {
     totalWindows: 0,
     skippedMl: 0,
     blinkCount: 0,
-    blinkCooldown: 0,
+    blinkActive: false,
+    blinkOpenStreak: 0,
     sessionStartTime: null,
     lastBlinkTime: null,
+    lastBlinkEventAt: -Infinity,
+    blinkRateWindowStart: null,
+    activeWarningKey: "",
+    heldWarning: "",
+    warningHoldUntil: -Infinity,
+    lastAlertBlinkRate: null,
     longestNoBlinkMs: 0,
     drowsyEvents: 0,
     wasDrowsy: false,
@@ -65,6 +76,7 @@ const state = {
 };
 
 const els = {
+    appShell: document.getElementById("app-shell"),
     video: document.getElementById("camera"),
     canvas: document.getElementById("overlay"),
     startBtn: document.getElementById("start-btn"),
@@ -72,6 +84,11 @@ const els = {
     resetBtn: document.getElementById("reset-btn"),
     notifyBtn: document.getElementById("notify-btn"),
     notificationStatus: document.getElementById("notification-status"),
+    cameraBadge: document.getElementById("camera-badge"),
+    cameraHint: document.getElementById("camera-hint"),
+    healthPill: document.getElementById("health-pill"),
+    faceQuality: document.getElementById("face-quality"),
+    primaryGauge: document.getElementById("primary-gauge"),
     status: document.getElementById("status"),
     rawEar: document.getElementById("raw-ear"),
     normEar: document.getElementById("norm-ear"),
@@ -133,9 +150,16 @@ function resetPipeline() {
     state.totalWindows = 0;
     state.skippedMl = 0;
     state.blinkCount = 0;
-    state.blinkCooldown = 0;
+    state.blinkActive = false;
+    state.blinkOpenStreak = 0;
     state.sessionStartTime = now;
     state.lastBlinkTime = null;
+    state.lastBlinkEventAt = -Infinity;
+    state.blinkRateWindowStart = null;
+    state.activeWarningKey = "";
+    state.heldWarning = "";
+    state.warningHoldUntil = -Infinity;
+    state.lastAlertBlinkRate = null;
     state.longestNoBlinkMs = 0;
     state.drowsyEvents = 0;
     state.wasDrowsy = false;
@@ -168,15 +192,46 @@ function pushLimited(buffer, value, maxLen) {
 function recordBlink(timestamp) {
     state.blinkCount += 1;
     state.lastBlinkTime = timestamp;
+    state.lastBlinkEventAt = timestamp;
     state.blinkEvents.push(timestamp);
     state.blinkEvents = state.blinkEvents.filter((eventTime) => timestamp - eventTime <= TREND_WINDOW_MS);
+}
+
+function updateBlinkEventState(prediction, earNorm, timestamp) {
+    const isBlink = prediction === 1;
+    const isClearlyOpen = prediction === 0 && earNorm >= BLINK_REARM_EAR_THRESHOLD;
+
+    if (isBlink) {
+        state.blinkOpenStreak = 0;
+        if (!state.blinkActive && timestamp - state.lastBlinkEventAt >= MIN_BLINK_INTERVAL_MS) {
+            recordBlink(timestamp);
+            state.blinkActive = true;
+        }
+        return;
+    }
+
+    if (isClearlyOpen) {
+        state.blinkOpenStreak += 1;
+        if (state.blinkOpenStreak >= BLINK_REARM_OPEN_WINDOWS) {
+            state.blinkActive = false;
+        }
+        return;
+    }
+
+    state.blinkOpenStreak = 0;
 }
 
 function updateEyeHealth(timestamp) {
     const sessionStart = state.sessionStartTime ?? timestamp;
     const sessionMs = Math.max(0, timestamp - sessionStart);
     const sessionSeconds = sessionMs / 1000;
-    const recentBlinks = state.blinkEvents.filter((eventTime) => timestamp - eventTime <= BLINK_RATE_WINDOW_MS);
+    const blinkRateWindowStart = state.blinkRateWindowStart ?? sessionStart;
+    const rollingStart = Math.max(blinkRateWindowStart, timestamp - BLINK_RATE_WINDOW_MS);
+    const recentBlinks = state.blinkEvents.filter(
+        (eventTime) => eventTime >= rollingStart && eventTime <= timestamp
+    );
+    const canEvaluateBlinkRate = state.calibrated
+        && timestamp - blinkRateWindowStart >= BLINK_RATE_WINDOW_MS;
     const trendBlinks = state.blinkEvents.filter((eventTime) => timestamp - eventTime <= TREND_WINDOW_MS);
     const trendMinutes = Math.max(1 / 60, Math.min(3, sessionSeconds / 60));
     const blinkTrend = trendBlinks.length / trendMinutes;
@@ -188,19 +243,33 @@ function updateEyeHealth(timestamp) {
         state.longestNoBlinkMs = Math.max(state.longestNoBlinkMs, noBlinkMs);
     }
 
-    let warning = "";
+    let warningCandidate = "";
     if (state.latest.drowsy) {
-        warning = "Drowsiness warning";
+        warningCandidate = "Drowsiness warning";
     } else if (noBlinkMs >= LONG_NO_BLINK_MS) {
-        warning = "Long no-blink streak";
-    } else if (sessionSeconds >= 60 && recentBlinks.length < VERY_LOW_BLINKS_PER_MIN) {
-        warning = "Very low blink rate";
-    } else if (sessionSeconds >= 60 && recentBlinks.length < TARGET_BLINKS_PER_MIN) {
-        warning = "Low blink rate";
+        warningCandidate = "Long no-blink streak";
+    } else if (canEvaluateBlinkRate && recentBlinks.length < VERY_LOW_BLINKS_PER_MIN) {
+        warningCandidate = "Very low blink rate";
+    } else if (canEvaluateBlinkRate && recentBlinks.length < TARGET_BLINKS_PER_MIN) {
+        warningCandidate = "Low blink rate";
     }
 
+    let blinkRate = recentBlinks.length;
+    if (warningCandidate && warningCandidate !== state.activeWarningKey) {
+        state.activeWarningKey = warningCandidate;
+        state.heldWarning = warningCandidate;
+        state.warningHoldUntil = timestamp + WARNING_HOLD_MS;
+        state.lastAlertBlinkRate = recentBlinks.length;
+        state.blinkRateWindowStart = timestamp;
+        blinkRate = 0;
+    } else if (!warningCandidate) {
+        state.activeWarningKey = "";
+    }
+
+    const warning = warningCandidate || (timestamp < state.warningHoldUntil ? state.heldWarning : "");
+
     state.health = {
-        blinkRate: recentBlinks.length,
+        blinkRate,
         blinkTrend,
         noBlinkSeconds: noBlinkMs / 1000,
         sessionSeconds,
@@ -226,6 +295,7 @@ function processRawEar(rawEar, timestamp) {
             state.latest.status = "Collecting window";
             state.sessionStartTime = timestamp;
             state.lastBlinkTime = timestamp;
+            state.blinkRateWindowStart = timestamp;
         }
         updateEyeHealth(timestamp);
         return;
@@ -277,13 +347,7 @@ function processRawEar(rawEar, timestamp) {
         state.latest.status = "Normal";
     }
 
-    if (state.blinkCooldown > 0) {
-        state.blinkCooldown -= 1;
-    }
-    if (prediction === 1 && state.blinkCooldown === 0) {
-        recordBlink(timestamp);
-        state.blinkCooldown = 3;
-    }
+    updateBlinkEventState(prediction, earNorm, timestamp);
     updateEyeHealth(timestamp);
 }
 
@@ -313,9 +377,9 @@ function clearCanvas() {
 }
 
 function predictionLabel(value) {
-    if (value === 0) return "0 - Open";
-    if (value === 1) return "1 - Blink";
-    if (value === 2) return "2 - Sleep";
+    if (value === 0) return "Open eyes";
+    if (value === 1) return "Blink";
+    if (value === 2) return "Sleep signal";
     return "Waiting";
 }
 
@@ -337,7 +401,13 @@ function updateNotificationUi() {
 
     state.notificationsEnabled = permission === "granted";
     els.notifyBtn.disabled = permission === "denied";
-    els.notifyBtn.textContent = permission === "granted" ? "Notifications On" : "Enable Notifications";
+    const label = permission === "granted" ? "Notifications On" : "Enable Notifications";
+    const labelEl = els.notifyBtn.querySelector("span:last-child");
+    if (labelEl) {
+        labelEl.textContent = label;
+    } else {
+        els.notifyBtn.textContent = label;
+    }
     els.notificationStatus.textContent = permission === "granted"
         ? "On"
         : permission === "denied"
@@ -397,9 +467,10 @@ function notificationContent(warning) {
     }
 
     if (warning === "Very low blink rate" || warning === "Low blink rate") {
+        const alertRate = state.lastAlertBlinkRate ?? state.health.blinkRate;
         return {
             title: "BlinkGuard: blink rate đang thấp",
-            body: `60 giây vừa rồi có ${state.health.blinkRate} lần chớp mắt. Mục tiêu hiện tại là ${TARGET_BLINKS_PER_MIN}/phút.`
+            body: `60 giây vừa rồi có ${alertRate} lần chớp mắt. Blink rate đã được bắt đầu lại để theo dõi giai đoạn phục hồi.`
         };
     }
 
@@ -416,9 +487,13 @@ function renderHud() {
     const health = state.health;
     const warning = health.warning;
     const statusText = warning || latest.status;
+    const visualState = stateNameForUi(warning, latest.status);
+    const gaugePercent = Math.min(1, health.blinkRate / TARGET_BLINKS_PER_MIN);
+    const gaugeDegrees = Math.round(gaugePercent * 360);
 
     els.status.textContent = statusText;
-    els.status.dataset.state = warning ? "danger" : latest.status.toLowerCase();
+    els.status.dataset.state = visualState;
+    els.appShell.dataset.state = visualState;
     els.rawEar.textContent = latest.rawEar == null ? "N/A" : latest.rawEar.toFixed(3);
     els.normEar.textContent = latest.normEar == null ? "N/A" : latest.normEar.toFixed(3);
     els.prediction.textContent = predictionLabel(latest.prediction);
@@ -434,7 +509,36 @@ function renderHud() {
     els.drowsyEvents.textContent = String(state.drowsyEvents);
     els.alert.hidden = !warning;
     els.alert.textContent = warning.toUpperCase();
+    els.primaryGauge.textContent = String(health.blinkRate);
+    els.primaryGauge.parentElement.style.background =
+        `radial-gradient(circle at center, rgba(18, 24, 33, 0.98) 58%, transparent 59%), conic-gradient(var(--cyan) ${gaugeDegrees}deg, rgba(73, 198, 216, 0.18) 0deg)`;
+    els.healthPill.querySelector("span:last-child").textContent = healthLabel(warning, latest.status);
+    els.cameraBadge.querySelector("span:last-child").textContent = cameraLabel(latest);
+    els.faceQuality.textContent = latest.faceDetected ? "Face locked" : state.running ? "Searching face" : "No face data";
     updateNotificationUi();
+}
+
+function stateNameForUi(warning, status) {
+    if (warning) return "danger";
+    return status.toLowerCase().replace(/\s+/g, "-");
+}
+
+function healthLabel(warning, status) {
+    if (warning) return "Needs attention";
+    if (status === "Normal") return "Healthy";
+    if (status === "Calibrating") return "Calibrating";
+    if (status === "Collecting window") return "Collecting";
+    if (status === "Blinking") return "Blink detected";
+    if (status === "No face") return "No face";
+    if (status === "Drowsy") return "Drowsy";
+    return "Standby";
+}
+
+function cameraLabel(latest) {
+    if (!state.running) return "Camera idle";
+    if (!latest.faceDetected) return "Searching face";
+    if (!state.calibrated) return "Calibrating";
+    return "Face locked";
 }
 
 function formatDuration(totalSeconds) {
@@ -518,7 +622,14 @@ function stopCamera() {
     els.startBtn.disabled = false;
     els.stopBtn.disabled = true;
     els.resetBtn.disabled = true;
+    state.latest = {
+        ...state.latest,
+        status: "Idle",
+        faceDetected: false,
+        drowsy: false
+    };
     els.message.textContent = "Camera stopped.";
+    renderHud();
 }
 
 function loop() {
@@ -553,6 +664,8 @@ function loop() {
             state.wasDrowsy = false;
             state.slidingWindow = [];
             state.predHistory = [];
+            state.blinkActive = false;
+            state.blinkOpenStreak = 0;
             updateEyeHealth(now);
             clearCanvas();
         }
