@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlinkGuard Web Demo</title>
+    <link rel="icon" type="image/png" href="app-icon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="app-shell" id="app-shell" data-state="idle">
+        <header class="topbar">
+            <div class="brand">
+                <img class="brand-mark" src="app-icon.png" alt="BlinkGuard">
+                <div>
+                    <p class="eyebrow">Client-side AI drowsiness monitor</p>
+                    <h1>BlinkGuard Web Demo</h1>
+                    <p class="subtitle">Theo dõi blink/min, streak không chớp mắt và cảnh báo buồn ngủ ngay trên trình duyệt.</p>
+                </div>
+            </div>
+
+            <div class="controls" aria-label="Camera controls">
+                <button class="btn primary" id="start-btn" type="button">
+                    <span class="btn-icon" aria-hidden="true">▶</span>
+                    <span>Start Camera</span>
+                </button>
+                <button class="btn" id="notify-btn" type="button">
+                    <span class="btn-icon" aria-hidden="true">●</span>
+                    <span>Enable Notifications</span>
+                </button>
+                <button class="btn ghost" id="reset-btn" type="button" disabled>
+                    <span class="btn-icon" aria-hidden="true">↺</span>
+                    <span>Reset</span>
+                </button>
+                <button class="btn danger" id="stop-btn" type="button" disabled>
+                    <span class="btn-icon" aria-hidden="true">■</span>
+                    <span>Stop</span>
+                </button>
+            </div>
+        </header>
+
+        <section class="dashboard">
+            <section class="camera-panel" aria-label="Live camera monitor">
+                <div class="stage-toolbar">
+                    <div>
+                        <p class="panel-label">Live detection</p>
+                        <h2>Realtime camera feed</h2>
+                    </div>
+                    <div class="camera-badge" id="camera-badge">
+                        <span class="status-dot"></span>
+                        <span>Camera idle</span>
+                    </div>
+                </div>
+
+                <div class="stage">
+                    <video id="camera" autoplay playsinline muted></video>
+                    <canvas id="overlay"></canvas>
+                    <div class="stage-placeholder" id="camera-hint">
+                        <div class="scan-frame" aria-hidden="true"></div>
+                        <p>Nhấn Start Camera để bắt đầu hiệu chỉnh mắt trong 15 mẫu đầu tiên.</p>
+                    </div>
+                    <div class="alert" id="alert" hidden>WARNING</div>
+                </div>
+
+                <div class="insight-strip">
+                    <div>
+                        <span>Session</span>
+                        <strong id="session-time">00:00</strong>
+                    </div>
+                    <div>
+                        <span>Blinks</span>
+                        <strong id="blink-count">0</strong>
+                    </div>
+                    <div>
+                        <span>Drowsy events</span>
+                        <strong id="drowsy-events">0</strong>
+                    </div>
+                    <div>
+                        <span>Notifications</span>
+                        <strong id="notification-status">Off</strong>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="hud" aria-label="Monitoring dashboard">
+                <section class="status-card">
+                    <div class="status-row">
+                        <div>
+                            <p class="panel-label">Current status</p>
+                            <div class="status-title" id="status">Idle</div>
+                        </div>
+                        <div class="health-pill" id="health-pill">
+                            <span class="status-dot"></span>
+                            <span>Standby</span>
+                        </div>
+                    </div>
+
+                    <div class="gauge" aria-label="Blink rate gauge">
+                        <div class="gauge-ring">
+                            <span id="primary-gauge">0</span>
+                            <small>/min</small>
+                        </div>
+                        <div class="gauge-copy">
+                            <span>Blink rate 60s</span>
+                            <strong id="blink-rate">0/min</strong>
+                            <p>Mục tiêu giữ nhịp chớp mắt quanh <span id="blink-target">12/min</span>.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="metric-section">
+                    <div class="section-heading">
+                        <p class="panel-label">Eye health</p>
+                        <span id="face-quality">No face data</span>
+                    </div>
+                    <div class="metric-grid">
+                        <div class="metric">
+                            <span>3-min trend</span>
+                            <strong id="blink-trend">0.0/min</strong>
+                        </div>
+                        <div class="metric">
+                            <span>No-blink streak</span>
+                            <strong id="no-blink-streak">0.0s</strong>
+                        </div>
+                        <div class="metric">
+                            <span>Raw EAR</span>
+                            <strong id="raw-ear">N/A</strong>
+                        </div>
+                        <div class="metric">
+                            <span>Norm EAR</span>
+                            <strong id="norm-ear">N/A</strong>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="metric-section">
+                    <div class="section-heading">
+                        <p class="panel-label">Model pipeline</p>
+                        <span id="cpu-mode">N/A</span>
+                    </div>
+                    <div class="metric-grid compact">
+                        <div class="metric">
+                            <span>Prediction</span>
+                            <strong id="prediction">Waiting</strong>
+                        </div>
+                        <div class="metric">
+                            <span>Calibration</span>
+                            <strong id="calibration">0/15</strong>
+                        </div>
+                        <div class="metric">
+                            <span>CPU saved</span>
+                            <strong id="cpu-saved">0.0%</strong>
+                        </div>
+                    </div>
+                </section>
+
+                <p class="message" id="message">Press Start Camera. Enable notifications if you want BlinkGuard to alert you outside the web page.</p>
+            </aside>
+        </section>
+    </main>
+
+    <script src="svm_model.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
